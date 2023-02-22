@@ -7,8 +7,10 @@
 
 MyDsp::MyDsp() : 
 AudioStream(AUDIO_OUTPUTS, new audio_block_t*[AUDIO_OUTPUTS]),
+lectureFreq(),
 distortionL(),
 distortionR()
+
 {
   // setting up DSP objects
   distortionL.setDrive(1);
@@ -40,6 +42,12 @@ void MyDsp::update(void) {
       transmit(outBlock[channel], channel);
       if(inBlock[channel]) release(inBlock[channel]);
       release(outBlock[channel]);
+      if(lectureFreq.available()){
+        Serial.printf("Entrée dans le if \n");
+        float note = lectureFreq.read();
+        float prob = lectureFreq.probability();
+        Serial.printf("Note : %3.2f Proba : %.2f \n", note, prob);
+      }
     }
   }
 }
