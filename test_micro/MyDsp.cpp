@@ -40,8 +40,7 @@ void MyDsp::update(void) {
         outBlock[channel]->data[i] = val;
       }
       transmit(outBlock[channel], channel);
-      if(inBlock[channel]) release(inBlock[channel]);
-      release(outBlock[channel]);
+      
       if(lectureFreq.available()){
         Serial.printf("Entrée dans le if \n");
         float note = lectureFreq.read();
