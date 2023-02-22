@@ -15,6 +15,7 @@ class MyDsp : public AudioStream
     
     virtual void update(void);
     void setDel(int del);
+    AudioAnalyzeNoteFrequency lectureFreq; 
     
   private:
     Distortion distortionL, distortionR;
