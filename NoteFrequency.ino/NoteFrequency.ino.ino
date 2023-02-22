@@ -57,7 +57,7 @@ void loop() {
         float ecart = note_prec*0.02973;
         if(note>note_prec+ecart or note<note_prec-ecart){
           gh.setParamValue("gate", 0);
-          delay(300);
+          delay(100);
           gh.setParamValue("freq", note);
           gh.setParamValue("gate", 1);
           note_prec=note;
