@@ -44,17 +44,16 @@
 #include "tuba_5.h"*/
 //---------------------------------------------------------------------------------------
 AudioAnalyzeNoteFrequency notefreq;
-AudioOutputAnalog         dac;
 AudioPlayMemory           wav_note;
 AudioMixer4               mixer;
 //---------------------------------------------------------------------------------------
-AudioConnection patchCord0(wav_note, 0, mixer, 0);
+AudioConnection patchCord0(wav_note, 0, notefreq, 0);
+/*AudioConnection patchCord0(wav_note, 0, mixer, 0);
 AudioConnection patchCord1(mixer, 0, notefreq, 0);
-AudioConnection patchCord2(mixer, 0, dac, 0);
 AudioOutputI2S out;
 AudioControlSGTL5000 audioShield;
 AudioConnection patchCord3(wav_note,0,out,0);
-AudioConnection patchCord4(wav_note,0,out,1);
+AudioConnection patchCord4(wav_note,0,out,1);*/
 //---------------------------------------------------------------------------------------
 IntervalTimer playNoteTimer;
 
@@ -77,15 +76,15 @@ void playNote(void) {
 }
 //---------------------------------------------------------------------------------------
 void setup() {
-    AudioMemory(2);
+    /*AudioMemory(2);
     audioShield.enable();
-    audioShield.volume(0.5);
+    audioShield.volume(0.5);*/
     
     /*
      *  Initialize the yin algorithm's absolute
      *  threshold, this is good number.
      */
-    notefreq.begin(1);
+    notefreq.begin(0.15);
     pinMode(LED_BUILTIN, OUTPUT);
     // Audio library isr allways gets priority
     playNoteTimer.priority(144);
