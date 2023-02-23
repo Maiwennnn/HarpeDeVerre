@@ -25,11 +25,14 @@ AudioPlayMemory           wav_note;
 AudioMixer4               mixer;
 AudioOutputI2S         audioOutput; 
 AudioInputI2S          audioInput;
+AudioAnalyzePeak aap;
 glassHarp gh;
 float note_prec=10;
+float threshold =0.15; 
 //---------------------------------------------------------------------------------------
 AudioConnection patchCord0(audioInput, 0, mixer, 0);
 AudioConnection patchCord1(mixer, 0, notefreq, 0);
+AudioConnection patchCord4(audioInput, 0, aap, 0);
 AudioConnection patchCord2(gh, 0, audioOutput, 0);
 AudioConnection patchCord3(gh, 0, audioOutput, 1);
 AudioControlSGTL5000 audioShield;
@@ -46,16 +49,17 @@ void setup() {
      *  Initialize the yin algorithm's absolute
      *  threshold, this is good number.
      */
-    notefreq.begin(0.15);
+    notefreq.begin(0.18);
+    
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
     // read back fundamental frequency
-    if (notefreq.available()and notefreq.read()>60) {
+    if (notefreq.available()and notefreq.read()>60 and aap.available()) {
         float note = notefreq.read();
         float ecart = note_prec*0.02973;
-        if(note>note_prec+ecart or note<note_prec-ecart){
+        if((note>note_prec+ecart or note<note_prec-ecart)and aap.read()>threshold){
           gh.setParamValue("gate", 0);
           delay(100);
           gh.setParamValue("freq", note);
@@ -64,5 +68,5 @@ void loop() {
         }
         float prob = notefreq.probability();
         Serial.printf("Note: %3.2f | Probability: %.2f\n", note, prob);
-    }
+
 }
