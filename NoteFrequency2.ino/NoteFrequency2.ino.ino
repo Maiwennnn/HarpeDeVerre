@@ -50,7 +50,7 @@ void setup() {
      *  Initialize the yin algorithm's absolute
      *  threshold, this is good number.
      */
-    notefreq.begin(0.18);
+    notefreq.begin(0.2);
     
     pinMode(LED_BUILTIN, OUTPUT);
 }
