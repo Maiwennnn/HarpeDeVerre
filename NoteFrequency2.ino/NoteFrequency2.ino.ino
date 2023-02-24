@@ -28,7 +28,7 @@ AudioInputI2S          audioInput;
 AudioAnalyzePeak aap;
 glassHarp gh;
 float note_prec=10;
-float threshold =0.2; 
+float threshold =0.15; 
 //---------------------------------------------------------------------------------------
 AudioConnection patchCord0(audioInput, 0, mixer, 0);
 AudioConnection patchCord1(mixer, 0, notefreq, 0);
@@ -58,10 +58,10 @@ void setup() {
 void loop() {
   //Serial.printf("haaaa");
     // read back fundamental frequency
-    if (notefreq.available()and notefreq.read()>60 and aap.available()) {
+    if (notefreq.available()and notefreq.read()>60 and aap.available()and aap.read()>threshold) {
         float note = notefreq.read();
         float ecart = note_prec*0.02973;
-        if((note>note_prec+ecart or note<note_prec-ecart)and aap.read()>threshold){
+        if((note>note_prec+ecart or note<note_prec-ecart)){
           gh.setParamValue("gate", 0);
           delay(100);
           gh.setParamValue("freq", note);
