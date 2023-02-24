@@ -9851,42 +9851,43 @@ class mydsp : public dsp {
 	FAUSTFLOAT fButton0;
 	float fVec0[2];
 	int iRec8[2];
-	float fConst5;
-	float fRec9[2];
-	float fConst6;
-	FAUSTFLOAT fEntry1;
 	FAUSTFLOAT fHslider2;
+	float fRec9[2];
+	FAUSTFLOAT fEntry1;
+	FAUSTFLOAT fHslider3;
+	FAUSTFLOAT fButton1;
+	float fVec1[2];
 	int IOTA0;
-	float fVec1[8192];
+	float fVec2[8192];
 	float fRec7[3];
-	float fConst7;
+	float fConst5;
 	float fRec6[2];
 	float fRec0[2];
-	float fConst8;
-	float fVec2[8192];
-	float fConst9;
+	float fConst6;
+	float fVec3[8192];
+	float fConst7;
 	float fRec11[3];
 	float fRec10[2];
 	float fRec1[2];
-	float fConst10;
-	float fVec3[4096];
-	float fConst11;
+	float fConst8;
+	float fVec4[4096];
+	float fConst9;
 	float fRec13[3];
 	float fRec12[2];
 	float fRec2[2];
-	float fConst12;
-	float fVec4[2048];
-	float fConst13;
+	float fConst10;
+	float fVec5[2048];
+	float fConst11;
 	float fRec15[3];
 	float fRec14[2];
 	float fRec3[2];
-	float fConst14;
-	float fVec5[1024];
-	float fConst15;
+	float fConst12;
+	float fVec6[1024];
+	float fConst13;
 	float fRec17[3];
 	float fRec16[2];
 	float fRec4[2];
-	float fConst16;
+	float fConst14;
 	float fRec19[3];
 	float fRec5[2];
 	
@@ -9894,11 +9895,13 @@ class mydsp : public dsp {
 	
 	void metadata(Meta* m) { 
 		m->declare("author", "Romain Michon");
+		m->declare("basics_lib_name", "Faust Basic Element Library");
+		m->declare("basics_lib_version", "0.9");
 		m->declare("compile_options", "-single -scal -I libraries/ -I project/ -lang wasm");
 		m->declare("copyright", "Romain Michon (rmichon@ccrma.stanford.edu)");
 		m->declare("delays_lib_name", "Faust Delay Library");
 		m->declare("delays_lib_version", "0.1");
-		m->declare("description", "Nonlinear Banded Waveguide Modeled Glass Harmonica");
+		m->declare("description", "This instrument uses banded waveguide. For more information, see Essl, G. and Cook, P. Banded Waveguides: Towards Physical Modelling of Bar Percussion Instruments, Proceedings of the 1999 International Computer Music Conference.");
 		m->declare("envelopes_lib_adsr_author", "Yann Orlarey and Andrey Bundin");
 		m->declare("envelopes_lib_author", "GRAME");
 		m->declare("envelopes_lib_copyright", "GRAME");
@@ -9906,7 +9909,7 @@ class mydsp : public dsp {
 		m->declare("envelopes_lib_name", "Faust Envelope Library");
 		m->declare("envelopes_lib_version", "0.2");
 		m->declare("filename", "glassHarp.dsp");
-		m->declare("filters_lib_lowpass0_highpass1", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters_lib_lowpass0_highpass1", "MIT-style STK-4.3 license");
 		m->declare("filters_lib_name", "Faust Filters Library");
 		m->declare("filters_lib_version", "0.3");
 		m->declare("instruments_lib_author", "Romain Michon (rmichon@ccrma.stanford.edu)");
@@ -9918,8 +9921,9 @@ class mydsp : public dsp {
 		m->declare("library_path1", "/libraries/envelopes.lib");
 		m->declare("library_path2", "/libraries/maths.lib");
 		m->declare("library_path3", "/libraries/platform.lib");
-		m->declare("library_path4", "/libraries/delays.lib");
-		m->declare("library_path5", "/libraries/filters.lib");
+		m->declare("library_path4", "/libraries/basics.lib");
+		m->declare("library_path5", "/libraries/delays.lib");
+		m->declare("library_path6", "/libraries/filters.lib");
 		m->declare("licence", "STK-4.3");
 		m->declare("maths_lib_author", "GRAME");
 		m->declare("maths_lib_copyright", "GRAME");
@@ -9949,27 +9953,27 @@ class mydsp : public dsp {
 		fConst2 = mydsp_faustpower2_f(fConst1);
 		fConst3 = 6.2831855f / fConst0;
 		fConst4 = 0.0f - 2.0f * fConst1;
-		fConst5 = 1.0f / std::max<float>(1.0f, 0.01f * fConst0);
-		fConst6 = 1.0f / std::max<float>(1.0f, 0.02f * fConst0);
-		fConst7 = 0.5f * (1.0f - fConst2);
-		fConst8 = 14.57699f / fConst0;
-		fConst9 = 0.43103448f * fConst0;
-		fConst10 = 26.703539f / fConst0;
-		fConst11 = 0.23529412f * fConst0;
-		fConst12 = 41.65752f / fConst0;
-		fConst13 = 0.15082957f * fConst0;
-		fConst14 = 58.93628f / fConst0;
-		fConst15 = 0.10660981f * fConst0;
-		fConst16 = 56.548668f / fConst0;
+		fConst5 = 0.5f * (1.0f - fConst2);
+		fConst6 = 14.57699f / fConst0;
+		fConst7 = 0.43103448f * fConst0;
+		fConst8 = 26.703539f / fConst0;
+		fConst9 = 0.23529412f * fConst0;
+		fConst10 = 41.65752f / fConst0;
+		fConst11 = 0.15082957f * fConst0;
+		fConst12 = 58.93628f / fConst0;
+		fConst13 = 0.10660981f * fConst0;
+		fConst14 = 56.548668f / fConst0;
 	}
 	
 	virtual void instanceResetUserInterface() {
 		fEntry0 = FAUSTFLOAT(4.4e+02f);
-		fHslider0 = FAUSTFLOAT(0.0f);
-		fHslider1 = FAUSTFLOAT(1.0f);
+		fHslider0 = FAUSTFLOAT(1.0f);
+		fHslider1 = FAUSTFLOAT(0.0f);
 		fButton0 = FAUSTFLOAT(0.0f);
+		fHslider2 = FAUSTFLOAT(1.0f);
 		fEntry1 = FAUSTFLOAT(0.8f);
-		fHslider2 = FAUSTFLOAT(0.2f);
+		fHslider3 = FAUSTFLOAT(0.2f);
+		fButton1 = FAUSTFLOAT(0.0f);
 	}
 	
 	virtual void instanceClear() {
@@ -9982,72 +9986,75 @@ class mydsp : public dsp {
 		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
 			fRec9[l2] = 0.0f;
 		}
-		IOTA0 = 0;
-		for (int l3 = 0; l3 < 8192; l3 = l3 + 1) {
+		for (int l3 = 0; l3 < 2; l3 = l3 + 1) {
 			fVec1[l3] = 0.0f;
 		}
-		for (int l4 = 0; l4 < 3; l4 = l4 + 1) {
-			fRec7[l4] = 0.0f;
+		IOTA0 = 0;
+		for (int l4 = 0; l4 < 8192; l4 = l4 + 1) {
+			fVec2[l4] = 0.0f;
 		}
-		for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
-			fRec6[l5] = 0.0f;
+		for (int l5 = 0; l5 < 3; l5 = l5 + 1) {
+			fRec7[l5] = 0.0f;
 		}
 		for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
-			fRec0[l6] = 0.0f;
+			fRec6[l6] = 0.0f;
 		}
-		for (int l7 = 0; l7 < 8192; l7 = l7 + 1) {
-			fVec2[l7] = 0.0f;
+		for (int l7 = 0; l7 < 2; l7 = l7 + 1) {
+			fRec0[l7] = 0.0f;
 		}
-		for (int l8 = 0; l8 < 3; l8 = l8 + 1) {
-			fRec11[l8] = 0.0f;
+		for (int l8 = 0; l8 < 8192; l8 = l8 + 1) {
+			fVec3[l8] = 0.0f;
 		}
-		for (int l9 = 0; l9 < 2; l9 = l9 + 1) {
-			fRec10[l9] = 0.0f;
+		for (int l9 = 0; l9 < 3; l9 = l9 + 1) {
+			fRec11[l9] = 0.0f;
 		}
 		for (int l10 = 0; l10 < 2; l10 = l10 + 1) {
-			fRec1[l10] = 0.0f;
+			fRec10[l10] = 0.0f;
 		}
-		for (int l11 = 0; l11 < 4096; l11 = l11 + 1) {
-			fVec3[l11] = 0.0f;
+		for (int l11 = 0; l11 < 2; l11 = l11 + 1) {
+			fRec1[l11] = 0.0f;
 		}
-		for (int l12 = 0; l12 < 3; l12 = l12 + 1) {
-			fRec13[l12] = 0.0f;
+		for (int l12 = 0; l12 < 4096; l12 = l12 + 1) {
+			fVec4[l12] = 0.0f;
 		}
-		for (int l13 = 0; l13 < 2; l13 = l13 + 1) {
-			fRec12[l13] = 0.0f;
+		for (int l13 = 0; l13 < 3; l13 = l13 + 1) {
+			fRec13[l13] = 0.0f;
 		}
 		for (int l14 = 0; l14 < 2; l14 = l14 + 1) {
-			fRec2[l14] = 0.0f;
+			fRec12[l14] = 0.0f;
 		}
-		for (int l15 = 0; l15 < 2048; l15 = l15 + 1) {
-			fVec4[l15] = 0.0f;
+		for (int l15 = 0; l15 < 2; l15 = l15 + 1) {
+			fRec2[l15] = 0.0f;
 		}
-		for (int l16 = 0; l16 < 3; l16 = l16 + 1) {
-			fRec15[l16] = 0.0f;
+		for (int l16 = 0; l16 < 2048; l16 = l16 + 1) {
+			fVec5[l16] = 0.0f;
 		}
-		for (int l17 = 0; l17 < 2; l17 = l17 + 1) {
-			fRec14[l17] = 0.0f;
+		for (int l17 = 0; l17 < 3; l17 = l17 + 1) {
+			fRec15[l17] = 0.0f;
 		}
 		for (int l18 = 0; l18 < 2; l18 = l18 + 1) {
-			fRec3[l18] = 0.0f;
+			fRec14[l18] = 0.0f;
 		}
-		for (int l19 = 0; l19 < 1024; l19 = l19 + 1) {
-			fVec5[l19] = 0.0f;
+		for (int l19 = 0; l19 < 2; l19 = l19 + 1) {
+			fRec3[l19] = 0.0f;
 		}
-		for (int l20 = 0; l20 < 3; l20 = l20 + 1) {
-			fRec17[l20] = 0.0f;
+		for (int l20 = 0; l20 < 1024; l20 = l20 + 1) {
+			fVec6[l20] = 0.0f;
 		}
-		for (int l21 = 0; l21 < 2; l21 = l21 + 1) {
-			fRec16[l21] = 0.0f;
+		for (int l21 = 0; l21 < 3; l21 = l21 + 1) {
+			fRec17[l21] = 0.0f;
 		}
 		for (int l22 = 0; l22 < 2; l22 = l22 + 1) {
-			fRec4[l22] = 0.0f;
+			fRec16[l22] = 0.0f;
 		}
-		for (int l23 = 0; l23 < 3; l23 = l23 + 1) {
-			fRec19[l23] = 0.0f;
+		for (int l23 = 0; l23 < 2; l23 = l23 + 1) {
+			fRec4[l23] = 0.0f;
 		}
-		for (int l24 = 0; l24 < 2; l24 = l24 + 1) {
-			fRec5[l24] = 0.0f;
+		for (int l24 = 0; l24 < 3; l24 = l24 + 1) {
+			fRec19[l24] = 0.0f;
+		}
+		for (int l25 = 0; l25 < 2; l25 = l25 + 1) {
+			fRec5[l25] = 0.0f;
 		}
 	}
 	
@@ -10085,17 +10092,21 @@ class mydsp : public dsp {
 		ui_interface->closeBox();
 		ui_interface->openHorizontalBox("Physical_and_Nonlinearity");
 		ui_interface->openVerticalBox("Physical_Parameters");
-		ui_interface->declare(&fHslider1, "2", "");
-		ui_interface->declare(&fHslider1, "tooltip", "A value between 0 and 1");
-		ui_interface->addHorizontalSlider("Base_Gain", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->declare(&fHslider2, "2", "");
-		ui_interface->declare(&fHslider2, "tooltip", "Bow pressure on the instrument (Value between 0 and 1)");
-		ui_interface->addHorizontalSlider("Bow_Pressure", &fHslider2, FAUSTFLOAT(0.2f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
 		ui_interface->declare(&fHslider0, "2", "");
 		ui_interface->declare(&fHslider0, "tooltip", "A value between 0 and 1");
-		ui_interface->addHorizontalSlider("Integration_Constant", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("Base_Gain", &fHslider0, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider3, "2", "");
+		ui_interface->declare(&fHslider3, "tooltip", "Bow pressure on the instrument (Value between 0 and 1)");
+		ui_interface->addHorizontalSlider("Bow_Pressure", &fHslider3, FAUSTFLOAT(0.2f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider1, "2", "");
+		ui_interface->declare(&fHslider1, "tooltip", "A value between 0 and 1");
+		ui_interface->addHorizontalSlider("Integration_Constant", &fHslider1, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider2, "2", "");
+		ui_interface->declare(&fHslider2, "tooltip", "TIme to play note");
+		ui_interface->addHorizontalSlider("release", &fHslider2, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(5.0f), FAUSTFLOAT(0.1f));
 		ui_interface->closeBox();
 		ui_interface->closeBox();
+		ui_interface->addButton("gate", &fButton1);
 		ui_interface->closeBox();
 	}
 	
@@ -10103,56 +10114,63 @@ class mydsp : public dsp {
 		FAUSTFLOAT* output0 = outputs[0];
 		float fSlow0 = float(fEntry0);
 		float fSlow1 = fConst4 * std::cos(fConst3 * fSlow0);
-		float fSlow2 = float(fHslider0);
-		float fSlow3 = 0.1f * float(fHslider1) + 0.9f;
+		float fSlow2 = 0.1f * float(fHslider0) + 0.75f;
+		float fSlow3 = float(fHslider1);
 		float fSlow4 = float(fButton0);
 		int iSlow5 = fSlow4 == 0.0f;
-		float fSlow6 = 0.1f * float(fEntry1);
-		float fSlow7 = 1e+01f - 9.0f * float(fHslider2);
-		int iSlow8 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst0 / fSlow0)));
-		float fSlow9 = fConst4 * std::cos(fConst8 * fSlow0);
-		int iSlow10 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst9 / fSlow0)));
-		float fSlow11 = fConst4 * std::cos(fConst10 * fSlow0);
-		int iSlow12 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst11 / fSlow0)));
-		float fSlow13 = fConst4 * std::cos(fConst12 * fSlow0);
-		int iSlow14 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst13 / fSlow0)));
-		float fSlow15 = fConst4 * std::cos(fConst14 * fSlow0);
-		int iSlow16 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst15 / fSlow0)));
-		float fSlow17 = fConst4 * std::cos(fConst16 * fSlow0);
+		float fSlow6 = 1.0f / std::max<float>(1.0f, fConst0 * float(fHslider2));
+		float fSlow7 = 0.15f * float(fEntry1);
+		float fSlow8 = 1e+01f - 9.0f * float(fHslider3);
+		float fSlow9 = float(fButton1);
+		int iSlow10 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst0 / fSlow0)));
+		float fSlow11 = fConst4 * std::cos(fConst6 * fSlow0);
+		int iSlow12 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst7 / fSlow0)));
+		float fSlow13 = fConst4 * std::cos(fConst8 * fSlow0);
+		int iSlow14 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst9 / fSlow0)));
+		float fSlow15 = fConst4 * std::cos(fConst10 * fSlow0);
+		int iSlow16 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst11 / fSlow0)));
+		float fSlow17 = fConst4 * std::cos(fConst12 * fSlow0);
+		int iSlow18 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst13 / fSlow0)));
+		float fSlow19 = fConst4 * std::cos(fConst14 * fSlow0);
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
 			fVec0[0] = fSlow4;
 			iRec8[0] = iSlow5 * (iRec8[1] + 1);
 			fRec9[0] = fSlow4 + fRec9[1] * float(fVec0[1] >= fSlow4);
-			float fTemp0 = fSlow6 * std::max<float>(0.0f, std::min<float>(fConst6 * fRec9[0], 1.0f) * (1.0f - fConst5 * float(iRec8[0]))) - fSlow3 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]) - fSlow2;
-			float fTemp1 = std::pow(std::fabs(fSlow7 * fTemp0) + 0.75f, -4.0f);
+			float fTemp0 = fSlow7 * std::max<float>(0.0f, std::min<float>(fRec9[0], 1.0f) * (1.0f - fSlow6 * float(iRec8[0]))) - 6.0f * (fSlow3 + fSlow2 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]));
+			float fTemp1 = std::pow(std::fabs(fSlow8 * fTemp0) + 0.75f, -4.0f);
 			float fTemp2 = 0.16666667f * fTemp0 * (float(fTemp1 > 1.0f) + fTemp1 * float(fTemp1 <= 1.0f));
-			fVec1[IOTA0 & 8191] = fRec6[1] + fTemp2;
-			fRec7[0] = 0.999f * fVec1[(IOTA0 - iSlow8) & 8191] - (fSlow1 * fRec7[1] + fConst2 * fRec7[2]);
-			fRec6[0] = fConst7 * (fRec7[0] - fRec7[2]);
+			fVec1[0] = fSlow9;
+			float fTemp3 = fSlow9 - fVec1[1];
+			float fTemp4 = fTemp3 * float(fTemp3 > 0.0f);
+			fVec2[IOTA0 & 8191] = fTemp4 + fRec6[1] + fTemp2;
+			fRec7[0] = 0.999f * fVec2[(IOTA0 - iSlow10) & 8191] - (fSlow1 * fRec7[1] + fConst2 * fRec7[2]);
+			fRec6[0] = fConst5 * (fRec7[0] - fRec7[2]);
 			fRec0[0] = fRec6[0];
-			fVec2[IOTA0 & 8191] = fTemp2 + fRec10[1];
-			fRec11[0] = 0.998001f * fVec2[(IOTA0 - iSlow10) & 8191] - (fSlow9 * fRec11[1] + fConst2 * fRec11[2]);
-			fRec10[0] = fConst7 * (fRec11[0] - fRec11[2]);
+			float fTemp5 = fTemp2 + fTemp4;
+			fVec3[IOTA0 & 8191] = fTemp5 + fRec10[1];
+			fRec11[0] = 0.998001f * fVec3[(IOTA0 - iSlow12) & 8191] - (fSlow11 * fRec11[1] + fConst2 * fRec11[2]);
+			fRec10[0] = fConst5 * (fRec11[0] - fRec11[2]);
 			fRec1[0] = fRec10[0];
-			fVec3[IOTA0 & 4095] = fTemp2 + fRec12[1];
-			fRec13[0] = 0.997003f * fVec3[(IOTA0 - iSlow12) & 4095] - (fSlow11 * fRec13[1] + fConst2 * fRec13[2]);
-			fRec12[0] = fConst7 * (fRec13[0] - fRec13[2]);
+			fVec4[IOTA0 & 4095] = fTemp5 + fRec12[1];
+			fRec13[0] = 0.997003f * fVec4[(IOTA0 - iSlow14) & 4095] - (fSlow13 * fRec13[1] + fConst2 * fRec13[2]);
+			fRec12[0] = fConst5 * (fRec13[0] - fRec13[2]);
 			fRec2[0] = fRec12[0];
-			fVec4[IOTA0 & 2047] = fTemp2 + fRec14[1];
-			fRec15[0] = 0.996006f * fVec4[(IOTA0 - iSlow14) & 2047] - (fSlow13 * fRec15[1] + fConst2 * fRec15[2]);
-			fRec14[0] = fConst7 * (fRec15[0] - fRec15[2]);
+			fVec5[IOTA0 & 2047] = fTemp5 + fRec14[1];
+			fRec15[0] = 0.996006f * fVec5[(IOTA0 - iSlow16) & 2047] - (fSlow15 * fRec15[1] + fConst2 * fRec15[2]);
+			fRec14[0] = fConst5 * (fRec15[0] - fRec15[2]);
 			fRec3[0] = fRec14[0];
-			fVec5[IOTA0 & 1023] = fTemp2 + fRec16[1];
-			fRec17[0] = 0.99501f * fVec5[(IOTA0 - iSlow16) & 1023] - (fSlow15 * fRec17[1] + fConst2 * fRec17[2]);
-			fRec16[0] = fConst7 * (fRec17[0] - fRec17[2]);
+			fVec6[IOTA0 & 1023] = fTemp5 + fRec16[1];
+			fRec17[0] = 0.99501f * fVec6[(IOTA0 - iSlow18) & 1023] - (fSlow17 * fRec17[1] + fConst2 * fRec17[2]);
+			fRec16[0] = fConst5 * (fRec17[0] - fRec17[2]);
 			fRec4[0] = fRec16[0];
-			fRec19[0] = -1.0f * (fSlow17 * fRec19[1] + fConst2 * fRec19[2]);
-			float fRec18 = fConst7 * (fRec19[0] - fRec19[2]);
+			fRec19[0] = -1.0f * (fSlow19 * fRec19[1] + fConst2 * fRec19[2]);
+			float fRec18 = fConst5 * (fRec19[0] - fRec19[2]);
 			fRec5[0] = fRec18;
 			output0[i0] = FAUSTFLOAT(4.0f * (fRec5[0] + fRec3[0] + fRec0[0] + fRec2[0] + fRec4[0] + fRec1[0]));
 			fVec0[1] = fVec0[0];
 			iRec8[1] = iRec8[0];
 			fRec9[1] = fRec9[0];
+			fVec1[1] = fVec1[0];
 			IOTA0 = IOTA0 + 1;
 			fRec7[2] = fRec7[1];
 			fRec7[1] = fRec7[0];
@@ -10189,23 +10207,27 @@ class mydsp : public dsp {
 	#define FAUST_COMPILATION_OPIONS "-a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -es 1 -mcd 16 -uim -single -ftz 0"
 	#define FAUST_INPUTS 0
 	#define FAUST_OUTPUTS 1
-	#define FAUST_ACTIVES 6
+	#define FAUST_ACTIVES 8
 	#define FAUST_PASSIVES 0
 
 	FAUST_ADDNUMENTRY("Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f);
 	FAUST_ADDNUMENTRY("Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f);
 	FAUST_ADDBUTTON("Basic_Parameters/gate", fButton0);
-	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 1.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider3, 0.2f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider1, 0.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/release", fHslider2, 1.0f, 0.0f, 5.0f, 0.1f);
+	FAUST_ADDBUTTON("gate", fButton1);
 
 	#define FAUST_LIST_ACTIVES(p) \
 		p(NUMENTRY, freq, "Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f) \
 		p(NUMENTRY, gain, "Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f) \
 		p(BUTTON, gate, "Basic_Parameters/gate", fButton0, 0.0f, 0.0f, 1.0f, 1.0f) \
-		p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Bow_Pressure, "Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Integration_Constant, "Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 1.0f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, Bow_Pressure, "Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider3, 0.2f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, Integration_Constant, "Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider1, 0.0f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, release, "Physical_and_Nonlinearity/Physical_Parameters/release", fHslider2, 1.0f, 0.0f, 5.0f, 0.1f) \
+		p(BUTTON, gate, "gate", fButton1, 0.0f, 0.0f, 1.0f, 1.0f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

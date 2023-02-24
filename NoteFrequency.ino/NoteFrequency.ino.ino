@@ -45,6 +45,7 @@ void setup() {
     audioShield.inputSelect(myInput);
     audioShield.volume(0.6);
     mixer.gain(0,0.8);
+    gh.setParamValue("duree", 2); 
     /*
      *  Initialize the yin algorithm's absolute
      *  threshold, this is good number.
@@ -61,12 +62,13 @@ void loop() {
         float ecart = note_prec*0.02973;
         if((note>note_prec+ecart or note<note_prec-ecart)and aap.read()>threshold){
           gh.setParamValue("gate", 0);
-          delay(100);
+          //delay(100);
           gh.setParamValue("freq", note);
           gh.setParamValue("gate", 1);
           note_prec=note;
         }
         float prob = notefreq.probability();
         Serial.printf("Note: %3.2f | Probability: %.2f\n", note, prob);
+    }
 
 }
