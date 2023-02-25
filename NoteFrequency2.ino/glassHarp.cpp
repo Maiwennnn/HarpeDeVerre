@@ -1487,8 +1487,8 @@ class FAUST_API AccDownConverter : public UpdatableValueConverter {
 
     private:
 
-        Interpolator3pt  fA2F;
-        Interpolator3pt fF2A;
+        Interpolator3pt	fA2F;
+        Interpolator3pt	fF2A;
 
     public:
 
@@ -1521,14 +1521,14 @@ class FAUST_API AccUpDownConverter : public UpdatableValueConverter {
 
     private:
 
-        Interpolator3pt fA2F;
+        Interpolator3pt	fA2F;
         Interpolator fF2A;
 
     public:
 
         AccUpDownConverter(double amin, double amid, double amax, double fmin, double fmid, double fmax) :
             fA2F(amin,amid,amax,fmin,fmax,fmin),
-            fF2A(fmin,fmax,amin,amax)       // Special, pseudo inverse of a non monotonic function
+            fF2A(fmin,fmax,amin,amax)				// Special, pseudo inverse of a non monotonic function
         {}
 
         virtual double ui2faust(double x) { return fA2F(x); }
@@ -1555,14 +1555,14 @@ class FAUST_API AccDownUpConverter : public UpdatableValueConverter {
 
     private:
 
-        Interpolator3pt fA2F;
+        Interpolator3pt	fA2F;
         Interpolator fF2A;
 
     public:
 
         AccDownUpConverter(double amin, double amid, double amax, double fmin, double fmid, double fmax) :
             fA2F(amin,amid,amax,fmax,fmin,fmax),
-            fF2A(fmin,fmax,amin,amax)       // Special, pseudo inverse of a non monotonic function
+            fF2A(fmin,fmax,amin,amax)				// Special, pseudo inverse of a non monotonic function
         {}
 
         virtual double ui2faust(double x) { return fA2F(x); }
@@ -1588,7 +1588,7 @@ class FAUST_API ZoneControl {
 
     protected:
 
-        FAUSTFLOAT* fZone;
+        FAUSTFLOAT*	fZone;
 
     public:
 
@@ -2683,9 +2683,9 @@ typedef struct {
     char *buf;
     volatile size_t write_ptr;
     volatile size_t read_ptr;
-    size_t  size;
-    size_t  size_mask;
-    int mlocked;
+    size_t	size;
+    size_t	size_mask;
+    int	mlocked;
 }
 ringbuffer_t;
 
@@ -2713,27 +2713,27 @@ static size_t ringbuffer_write_space(const ringbuffer_t *rb);
 static ringbuffer_t *
 ringbuffer_create (size_t sz)
 {
-  size_t power_of_two;
-  ringbuffer_t *rb;
+	size_t power_of_two;
+	ringbuffer_t *rb;
 
-  if ((rb = (ringbuffer_t *) malloc (sizeof (ringbuffer_t))) == NULL) {
-    return NULL;
-  }
+	if ((rb = (ringbuffer_t *) malloc (sizeof (ringbuffer_t))) == NULL) {
+		return NULL;
+	}
 
-  for (power_of_two = 1u; 1u << power_of_two < sz; power_of_two++);
+	for (power_of_two = 1u; 1u << power_of_two < sz; power_of_two++);
 
-  rb->size = 1u << power_of_two;
-  rb->size_mask = rb->size;
-  rb->size_mask -= 1;
-  rb->write_ptr = 0;
-  rb->read_ptr = 0;
-  if ((rb->buf = (char *) malloc (rb->size)) == NULL) {
-    free (rb);
-    return NULL;
-  }
-  rb->mlocked = 0;
+	rb->size = 1u << power_of_two;
+	rb->size_mask = rb->size;
+	rb->size_mask -= 1;
+	rb->write_ptr = 0;
+	rb->read_ptr = 0;
+	if ((rb->buf = (char *) malloc (rb->size)) == NULL) {
+		free (rb);
+		return NULL;
+	}
+	rb->mlocked = 0;
 
-  return rb;
+	return rb;
 }
 
 /* Free all data associated with the ringbuffer `rb'. */
@@ -2742,12 +2742,12 @@ static void
 ringbuffer_free (ringbuffer_t * rb)
 {
 #ifdef USE_MLOCK
-  if (rb->mlocked) {
-    munlock (rb->buf, rb->size);
-  }
+	if (rb->mlocked) {
+		munlock (rb->buf, rb->size);
+	}
 #endif /* USE_MLOCK */
-  free (rb->buf);
-  free (rb);
+	free (rb->buf);
+	free (rb);
 }
 
 /* Lock the data block of `rb' using the system call 'mlock'.  */
@@ -2756,12 +2756,12 @@ static int
 ringbuffer_mlock (ringbuffer_t * rb)
 {
 #ifdef USE_MLOCK
-  if (mlock (rb->buf, rb->size)) {
-    return -1;
-  }
+	if (mlock (rb->buf, rb->size)) {
+		return -1;
+	}
 #endif /* USE_MLOCK */
-  rb->mlocked = 1;
-  return 0;
+	rb->mlocked = 1;
+	return 0;
 }
 
 /* Reset the read and write pointers to zero. This is not thread
@@ -2770,8 +2770,8 @@ ringbuffer_mlock (ringbuffer_t * rb)
 static void
 ringbuffer_reset (ringbuffer_t * rb)
 {
-  rb->read_ptr = 0;
-  rb->write_ptr = 0;
+	rb->read_ptr = 0;
+	rb->write_ptr = 0;
     memset(rb->buf, 0, rb->size);
 }
 
@@ -2795,16 +2795,16 @@ ringbuffer_reset_size (ringbuffer_t * rb, size_t sz)
 static size_t
 ringbuffer_read_space (const ringbuffer_t * rb)
 {
-  size_t w, r;
+	size_t w, r;
 
-  w = rb->write_ptr;
-  r = rb->read_ptr;
+	w = rb->write_ptr;
+	r = rb->read_ptr;
 
-  if (w > r) {
-    return w - r;
-  } else {
-    return (w - r + rb->size) & rb->size_mask;
-  }
+	if (w > r) {
+		return w - r;
+	} else {
+		return (w - r + rb->size) & rb->size_mask;
+	}
 }
 
 /* Return the number of bytes available for writing. This is the
@@ -2814,18 +2814,18 @@ ringbuffer_read_space (const ringbuffer_t * rb)
 static size_t
 ringbuffer_write_space (const ringbuffer_t * rb)
 {
-  size_t w, r;
+	size_t w, r;
 
-  w = rb->write_ptr;
-  r = rb->read_ptr;
+	w = rb->write_ptr;
+	r = rb->read_ptr;
 
-  if (w > r) {
-    return ((r - w + rb->size) & rb->size_mask) - 1;
-  } else if (w < r) {
-    return (r - w) - 1;
-  } else {
-    return rb->size - 1;
-  }
+	if (w > r) {
+		return ((r - w + rb->size) & rb->size_mask) - 1;
+	} else if (w < r) {
+		return (r - w) - 1;
+	} else {
+		return rb->size - 1;
+	}
 }
 
 /* The copying data reader. Copy at most `cnt' bytes from `rb' to
@@ -2834,36 +2834,36 @@ ringbuffer_write_space (const ringbuffer_t * rb)
 static size_t
 ringbuffer_read (ringbuffer_t * rb, char *dest, size_t cnt)
 {
-  size_t free_cnt;
-  size_t cnt2;
-  size_t to_read;
-  size_t n1, n2;
+	size_t free_cnt;
+	size_t cnt2;
+	size_t to_read;
+	size_t n1, n2;
 
-  if ((free_cnt = ringbuffer_read_space (rb)) == 0) {
-    return 0;
-  }
+	if ((free_cnt = ringbuffer_read_space (rb)) == 0) {
+		return 0;
+	}
 
-  to_read = cnt > free_cnt ? free_cnt : cnt;
+	to_read = cnt > free_cnt ? free_cnt : cnt;
 
-  cnt2 = rb->read_ptr + to_read;
+	cnt2 = rb->read_ptr + to_read;
 
-  if (cnt2 > rb->size) {
-    n1 = rb->size - rb->read_ptr;
-    n2 = cnt2 & rb->size_mask;
-  } else {
-    n1 = to_read;
-    n2 = 0;
-  }
+	if (cnt2 > rb->size) {
+		n1 = rb->size - rb->read_ptr;
+		n2 = cnt2 & rb->size_mask;
+	} else {
+		n1 = to_read;
+		n2 = 0;
+	}
 
-  memcpy (dest, &(rb->buf[rb->read_ptr]), n1);
-  rb->read_ptr = (rb->read_ptr + n1) & rb->size_mask;
+	memcpy (dest, &(rb->buf[rb->read_ptr]), n1);
+	rb->read_ptr = (rb->read_ptr + n1) & rb->size_mask;
 
-  if (n2) {
-    memcpy (dest + n1, &(rb->buf[rb->read_ptr]), n2);
-    rb->read_ptr = (rb->read_ptr + n2) & rb->size_mask;
-  }
+	if (n2) {
+		memcpy (dest + n1, &(rb->buf[rb->read_ptr]), n2);
+		rb->read_ptr = (rb->read_ptr + n2) & rb->size_mask;
+	}
 
-  return to_read;
+	return to_read;
 }
 
 /* The copying data reader w/o read pointer advance. Copy at most
@@ -2873,38 +2873,38 @@ ringbuffer_read (ringbuffer_t * rb, char *dest, size_t cnt)
 static size_t
 ringbuffer_peek (ringbuffer_t * rb, char *dest, size_t cnt)
 {
-  size_t free_cnt;
-  size_t cnt2;
-  size_t to_read;
-  size_t n1, n2;
-  size_t tmp_read_ptr;
+	size_t free_cnt;
+	size_t cnt2;
+	size_t to_read;
+	size_t n1, n2;
+	size_t tmp_read_ptr;
 
-  tmp_read_ptr = rb->read_ptr;
+	tmp_read_ptr = rb->read_ptr;
 
-  if ((free_cnt = ringbuffer_read_space (rb)) == 0) {
-    return 0;
-  }
+	if ((free_cnt = ringbuffer_read_space (rb)) == 0) {
+		return 0;
+	}
 
-  to_read = cnt > free_cnt ? free_cnt : cnt;
+	to_read = cnt > free_cnt ? free_cnt : cnt;
 
-  cnt2 = tmp_read_ptr + to_read;
+	cnt2 = tmp_read_ptr + to_read;
 
-  if (cnt2 > rb->size) {
-    n1 = rb->size - tmp_read_ptr;
-    n2 = cnt2 & rb->size_mask;
-  } else {
-    n1 = to_read;
-    n2 = 0;
-  }
+	if (cnt2 > rb->size) {
+		n1 = rb->size - tmp_read_ptr;
+		n2 = cnt2 & rb->size_mask;
+	} else {
+		n1 = to_read;
+		n2 = 0;
+	}
 
-  memcpy (dest, &(rb->buf[tmp_read_ptr]), n1);
-  tmp_read_ptr = (tmp_read_ptr + n1) & rb->size_mask;
+	memcpy (dest, &(rb->buf[tmp_read_ptr]), n1);
+	tmp_read_ptr = (tmp_read_ptr + n1) & rb->size_mask;
 
-  if (n2) {
-    memcpy (dest + n1, &(rb->buf[tmp_read_ptr]), n2);
-  }
+	if (n2) {
+		memcpy (dest + n1, &(rb->buf[tmp_read_ptr]), n2);
+	}
 
-  return to_read;
+	return to_read;
 }
 
 /* The copying data writer. Copy at most `cnt' bytes to `rb' from
@@ -2913,36 +2913,36 @@ ringbuffer_peek (ringbuffer_t * rb, char *dest, size_t cnt)
 static size_t
 ringbuffer_write (ringbuffer_t * rb, const char *src, size_t cnt)
 {
-  size_t free_cnt;
-  size_t cnt2;
-  size_t to_write;
-  size_t n1, n2;
+	size_t free_cnt;
+	size_t cnt2;
+	size_t to_write;
+	size_t n1, n2;
 
-  if ((free_cnt = ringbuffer_write_space (rb)) == 0) {
-    return 0;
-  }
+	if ((free_cnt = ringbuffer_write_space (rb)) == 0) {
+		return 0;
+	}
 
-  to_write = cnt > free_cnt ? free_cnt : cnt;
+	to_write = cnt > free_cnt ? free_cnt : cnt;
 
-  cnt2 = rb->write_ptr + to_write;
+	cnt2 = rb->write_ptr + to_write;
 
-  if (cnt2 > rb->size) {
-    n1 = rb->size - rb->write_ptr;
-    n2 = cnt2 & rb->size_mask;
-  } else {
-    n1 = to_write;
-    n2 = 0;
-  }
+	if (cnt2 > rb->size) {
+		n1 = rb->size - rb->write_ptr;
+		n2 = cnt2 & rb->size_mask;
+	} else {
+		n1 = to_write;
+		n2 = 0;
+	}
 
-  memcpy (&(rb->buf[rb->write_ptr]), src, n1);
-  rb->write_ptr = (rb->write_ptr + n1) & rb->size_mask;
+	memcpy (&(rb->buf[rb->write_ptr]), src, n1);
+	rb->write_ptr = (rb->write_ptr + n1) & rb->size_mask;
 
-  if (n2) {
-    memcpy (&(rb->buf[rb->write_ptr]), src + n1, n2);
-    rb->write_ptr = (rb->write_ptr + n2) & rb->size_mask;
-  }
+	if (n2) {
+		memcpy (&(rb->buf[rb->write_ptr]), src + n1, n2);
+		rb->write_ptr = (rb->write_ptr + n2) & rb->size_mask;
+	}
 
-  return to_write;
+	return to_write;
 }
 
 /* Advance the read pointer `cnt' places. */
@@ -2950,8 +2950,8 @@ ringbuffer_write (ringbuffer_t * rb, const char *src, size_t cnt)
 static void
 ringbuffer_read_advance (ringbuffer_t * rb, size_t cnt)
 {
-  size_t tmp = (rb->read_ptr + cnt) & rb->size_mask;
-  rb->read_ptr = tmp;
+	size_t tmp = (rb->read_ptr + cnt) & rb->size_mask;
+	rb->read_ptr = tmp;
 }
 
 /* Advance the write pointer `cnt' places. */
@@ -2959,8 +2959,8 @@ ringbuffer_read_advance (ringbuffer_t * rb, size_t cnt)
 static void
 ringbuffer_write_advance (ringbuffer_t * rb, size_t cnt)
 {
-  size_t tmp = (rb->write_ptr + cnt) & rb->size_mask;
-  rb->write_ptr = tmp;
+	size_t tmp = (rb->write_ptr + cnt) & rb->size_mask;
+	rb->write_ptr = tmp;
 }
 
 /* The non-copying data reader. `vec' is an array of two places. Set
@@ -2970,41 +2970,41 @@ ringbuffer_write_advance (ringbuffer_t * rb, size_t cnt)
 
 static void
 ringbuffer_get_read_vector (const ringbuffer_t * rb,
-         ringbuffer_data_t * vec)
+				 ringbuffer_data_t * vec)
 {
-  size_t free_cnt;
-  size_t cnt2;
-  size_t w, r;
+	size_t free_cnt;
+	size_t cnt2;
+	size_t w, r;
 
-  w = rb->write_ptr;
-  r = rb->read_ptr;
+	w = rb->write_ptr;
+	r = rb->read_ptr;
 
-  if (w > r) {
-    free_cnt = w - r;
-  } else {
-    free_cnt = (w - r + rb->size) & rb->size_mask;
-  }
+	if (w > r) {
+		free_cnt = w - r;
+	} else {
+		free_cnt = (w - r + rb->size) & rb->size_mask;
+	}
 
-  cnt2 = r + free_cnt;
+	cnt2 = r + free_cnt;
 
-  if (cnt2 > rb->size) {
+	if (cnt2 > rb->size) {
 
-    /* Two part vector: the rest of the buffer after the current write
-       ptr, plus some from the start of the buffer. */
+		/* Two part vector: the rest of the buffer after the current write
+		   ptr, plus some from the start of the buffer. */
 
-    vec[0].buf = &(rb->buf[r]);
-    vec[0].len = rb->size - r;
-    vec[1].buf = rb->buf;
-    vec[1].len = cnt2 & rb->size_mask;
+		vec[0].buf = &(rb->buf[r]);
+		vec[0].len = rb->size - r;
+		vec[1].buf = rb->buf;
+		vec[1].len = cnt2 & rb->size_mask;
 
-  } else {
+	} else {
 
-    /* Single part vector: just the rest of the buffer */
+		/* Single part vector: just the rest of the buffer */
 
-    vec[0].buf = &(rb->buf[r]);
-    vec[0].len = free_cnt;
-    vec[1].len = 0;
-  }
+		vec[0].buf = &(rb->buf[r]);
+		vec[0].len = free_cnt;
+		vec[1].len = 0;
+	}
 }
 
 /* The non-copying data writer. `vec' is an array of two places. Set
@@ -3014,39 +3014,39 @@ ringbuffer_get_read_vector (const ringbuffer_t * rb,
 
 static void
 ringbuffer_get_write_vector (const ringbuffer_t * rb,
-          ringbuffer_data_t * vec)
+				  ringbuffer_data_t * vec)
 {
-  size_t free_cnt;
-  size_t cnt2;
-  size_t w, r;
+	size_t free_cnt;
+	size_t cnt2;
+	size_t w, r;
 
-  w = rb->write_ptr;
-  r = rb->read_ptr;
+	w = rb->write_ptr;
+	r = rb->read_ptr;
 
-  if (w > r) {
-    free_cnt = ((r - w + rb->size) & rb->size_mask) - 1;
-  } else if (w < r) {
-    free_cnt = (r - w) - 1;
-  } else {
-    free_cnt = rb->size - 1;
-  }
+	if (w > r) {
+		free_cnt = ((r - w + rb->size) & rb->size_mask) - 1;
+	} else if (w < r) {
+		free_cnt = (r - w) - 1;
+	} else {
+		free_cnt = rb->size - 1;
+	}
 
-  cnt2 = w + free_cnt;
+	cnt2 = w + free_cnt;
 
-  if (cnt2 > rb->size) {
+	if (cnt2 > rb->size) {
 
-    /* Two part vector: the rest of the buffer after the current write
-       ptr, plus some from the start of the buffer. */
+		/* Two part vector: the rest of the buffer after the current write
+		   ptr, plus some from the start of the buffer. */
 
-    vec[0].buf = &(rb->buf[w]);
-    vec[0].len = rb->size - w;
-    vec[1].buf = rb->buf;
-    vec[1].len = cnt2 & rb->size_mask;
-  } else {
-    vec[0].buf = &(rb->buf[w]);
-    vec[0].len = free_cnt;
-    vec[1].len = 0;
-  }
+		vec[0].buf = &(rb->buf[w]);
+		vec[0].len = rb->size - w;
+		vec[1].buf = rb->buf;
+		vec[1].len = cnt2 & rb->size_mask;
+	} else {
+		vec[0].buf = &(rb->buf[w]);
+		vec[0].len = free_cnt;
+		vec[1].len = 0;
+	}
 }
 
 #endif // __ring_buffer__
@@ -3138,7 +3138,7 @@ typedef std::map<FAUSTFLOAT*, ringbuffer_t*> ztimedmap;
 
 class GUI : public UI
 {
-    
+		
     private:
      
         static std::list<GUI*> fGuiList;
@@ -3148,7 +3148,7 @@ class GUI : public UI
      public:
             
         GUI():fStopped(false)
-        { 
+        {	
             fGuiList.push_back(this);
         }
         
@@ -3285,14 +3285,14 @@ class uiItem : public uiTypedItemReal<FAUSTFLOAT> {
         virtual ~uiItem() 
         {}
 
-    void modifyZone(FAUSTFLOAT v)
-    {
-      fCache = v;
-      if (*fZone != v) {
-        *fZone = v;
-        fGUI->updateZone(fZone);
-      }
-    }
+		void modifyZone(FAUSTFLOAT v)
+		{
+			fCache = v;
+			if (*fZone != v) {
+				*fZone = v;
+				fGUI->updateZone(fZone);
+			}
+		}
 
 };
 
@@ -3355,10 +3355,10 @@ class uiCallbackItem : public uiItem {
         : uiItem(ui, zone), fCallback(foo), fData(data) {}
         
         virtual void reflectZone() 
-        {   
+        {		
             FAUSTFLOAT v = *fZone;
             fCache = v; 
-            fCallback(v, fData);  
+            fCallback(v, fData);	
         }
 };
 
@@ -9833,381 +9833,371 @@ struct dsp_poly_factory : public dsp_factory {
 #endif
 
 static float mydsp_faustpower2_f(float value) {
-  return value * value;
+	return value * value;
 }
 
 class mydsp : public dsp {
-  
+	
  public:
-  
-  int fSampleRate;
-  float fConst0;
-  float fConst2;
-  FAUSTFLOAT fEntry0;
-  float fConst3;
-  float fConst4;
-  FAUSTFLOAT fHslider0;
-  FAUSTFLOAT fHslider1;
-  FAUSTFLOAT fButton0;
-  float fVec0[2];
-  int iRec8[2];
-  float fConst5;
-  float fRec9[2];
-  float fConst6;
-  FAUSTFLOAT fEntry1;
-  FAUSTFLOAT fHslider2;
-  int IOTA0;
-  float fVec1[8192];
-  float fRec7[3];
-  float fConst7;
-  float fRec6[2];
-  float fRec0[2];
-  float fConst8;
-  float fVec2[8192];
-  float fConst9;
-  float fRec11[3];
-  float fRec10[2];
-  float fRec1[2];
-  float fConst10;
-  float fVec3[4096];
-  float fConst11;
-  float fRec13[3];
-  float fRec12[2];
-  float fRec2[2];
-  float fConst12;
-  float fVec4[2048];
-  float fConst13;
-  float fRec15[3];
-  float fRec14[2];
-  float fRec3[2];
-  float fConst14;
-  float fVec5[1024];
-  float fConst15;
-  float fRec17[3];
-  float fRec16[2];
-  float fRec4[2];
-  float fConst16;
-  float fRec19[3];
-  float fRec5[2];
-  
+	
+	int fSampleRate;
+	float fConst0;
+	float fConst2;
+	FAUSTFLOAT fEntry0;
+	float fConst3;
+	float fConst4;
+	FAUSTFLOAT fHslider0;
+	FAUSTFLOAT fButton0;
+	float fVec0[2];
+	int iRec8[2];
+	float fConst5;
+	float fRec9[2];
+	FAUSTFLOAT fEntry1;
+	FAUSTFLOAT fHslider1;
+	int IOTA0;
+	float fVec1[8192];
+	float fRec7[3];
+	float fConst6;
+	float fRec6[2];
+	float fRec0[2];
+	float fConst7;
+	float fVec2[8192];
+	float fConst8;
+	float fRec11[3];
+	float fRec10[2];
+	float fRec1[2];
+	float fConst9;
+	float fVec3[4096];
+	float fConst10;
+	float fRec13[3];
+	float fRec12[2];
+	float fRec2[2];
+	float fConst11;
+	float fVec4[2048];
+	float fConst12;
+	float fRec15[3];
+	float fRec14[2];
+	float fRec3[2];
+	float fConst13;
+	float fVec5[1024];
+	float fConst14;
+	float fRec17[3];
+	float fRec16[2];
+	float fRec4[2];
+	float fConst15;
+	float fRec19[3];
+	float fRec5[2];
+	
  public:
-  
-  void metadata(Meta* m) { 
-    m->declare("author", "Romain Michon");
-    m->declare("compile_options", "-single -scal -I libraries/ -I project/ -lang wasm");
-    m->declare("copyright", "Romain Michon (rmichon@ccrma.stanford.edu)");
-    m->declare("delays_lib_name", "Faust Delay Library");
-    m->declare("delays_lib_version", "0.1");
-    m->declare("description", "Nonlinear Banded Waveguide Modeled Glass Harmonica");
-    m->declare("envelopes_lib_adsr_author", "Yann Orlarey and Andrey Bundin");
-    m->declare("envelopes_lib_author", "GRAME");
-    m->declare("envelopes_lib_copyright", "GRAME");
-    m->declare("envelopes_lib_license", "LGPL with exception");
-    m->declare("envelopes_lib_name", "Faust Envelope Library");
-    m->declare("envelopes_lib_version", "0.2");
-    m->declare("filename", "glassHarp.dsp");
-    m->declare("filters_lib_lowpass0_highpass1", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
-    m->declare("filters_lib_name", "Faust Filters Library");
-    m->declare("filters_lib_version", "0.3");
-    m->declare("instruments_lib_author", "Romain Michon (rmichon@ccrma.stanford.edu)");
-    m->declare("instruments_lib_copyright", "Romain Michon");
-    m->declare("instruments_lib_licence", "STK-4.3");
-    m->declare("instruments_lib_name", "Faust-STK Tools Library");
-    m->declare("instruments_lib_version", "1.0");
-    m->declare("library_path0", "/libraries/instruments.lib");
-    m->declare("library_path1", "/libraries/envelopes.lib");
-    m->declare("library_path2", "/libraries/maths.lib");
-    m->declare("library_path3", "/libraries/platform.lib");
-    m->declare("library_path4", "/libraries/delays.lib");
-    m->declare("library_path5", "/libraries/filters.lib");
-    m->declare("licence", "STK-4.3");
-    m->declare("maths_lib_author", "GRAME");
-    m->declare("maths_lib_copyright", "GRAME");
-    m->declare("maths_lib_license", "LGPL with exception");
-    m->declare("maths_lib_name", "Faust Math Library");
-    m->declare("maths_lib_version", "2.5");
-    m->declare("name", "glassHarp");
-    m->declare("platform_lib_name", "Generic Platform Library");
-    m->declare("platform_lib_version", "0.3");
-    m->declare("version", "2.54.11");
-  }
+	
+	void metadata(Meta* m) { 
+		m->declare("author", "Romain Michon");
+		m->declare("compile_options", "-single -scal -I libraries/ -I project/ -lang wasm");
+		m->declare("copyright", "Romain Michon (rmichon@ccrma.stanford.edu)");
+		m->declare("delays_lib_name", "Faust Delay Library");
+		m->declare("delays_lib_version", "0.1");
+		m->declare("description", "Nonlinear Banded Waveguide Modeled Glass Harmonica");
+		m->declare("envelopes_lib_asr_author", "Yann Orlarey, Stéphane Letz");
+		m->declare("envelopes_lib_author", "GRAME");
+		m->declare("envelopes_lib_copyright", "GRAME");
+		m->declare("envelopes_lib_license", "LGPL with exception");
+		m->declare("envelopes_lib_name", "Faust Envelope Library");
+		m->declare("envelopes_lib_version", "0.2");
+		m->declare("filename", "glassHarp.dsp");
+		m->declare("filters_lib_lowpass0_highpass1", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
+		m->declare("filters_lib_name", "Faust Filters Library");
+		m->declare("filters_lib_version", "0.3");
+		m->declare("instruments_lib_author", "Romain Michon (rmichon@ccrma.stanford.edu)");
+		m->declare("instruments_lib_copyright", "Romain Michon");
+		m->declare("instruments_lib_licence", "STK-4.3");
+		m->declare("instruments_lib_name", "Faust-STK Tools Library");
+		m->declare("instruments_lib_version", "1.0");
+		m->declare("library_path0", "/libraries/instruments.lib");
+		m->declare("library_path1", "/libraries/envelopes.lib");
+		m->declare("library_path2", "/libraries/maths.lib");
+		m->declare("library_path3", "/libraries/platform.lib");
+		m->declare("library_path4", "/libraries/delays.lib");
+		m->declare("library_path5", "/libraries/filters.lib");
+		m->declare("licence", "STK-4.3");
+		m->declare("maths_lib_author", "GRAME");
+		m->declare("maths_lib_copyright", "GRAME");
+		m->declare("maths_lib_license", "LGPL with exception");
+		m->declare("maths_lib_name", "Faust Math Library");
+		m->declare("maths_lib_version", "2.5");
+		m->declare("name", "glassHarp");
+		m->declare("platform_lib_name", "Generic Platform Library");
+		m->declare("platform_lib_version", "0.3");
+		m->declare("version", "2.54.11");
+	}
 
-  virtual int getNumInputs() {
-    return 0;
-  }
-  virtual int getNumOutputs() {
-    return 1;
-  }
-  
-  static void classInit(int sample_rate) {
-  }
-  
-  virtual void instanceConstants(int sample_rate) {
-    fSampleRate = sample_rate;
-    fConst0 = std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
-    float fConst1 = 1.0f - 100.53097f / fConst0;
-    fConst2 = mydsp_faustpower2_f(fConst1);
-    fConst3 = 6.2831855f / fConst0;
-    fConst4 = 0.0f - 2.0f * fConst1;
-    fConst5 = 1.0f / std::max<float>(1.0f, 0.01f * fConst0);
-    fConst6 = 1.0f / std::max<float>(1.0f, 0.02f * fConst0);
-    fConst7 = 0.5f * (1.0f - fConst2);
-    fConst8 = 14.57699f / fConst0;
-    fConst9 = 0.43103448f * fConst0;
-    fConst10 = 26.703539f / fConst0;
-    fConst11 = 0.23529412f * fConst0;
-    fConst12 = 41.65752f / fConst0;
-    fConst13 = 0.15082957f * fConst0;
-    fConst14 = 58.93628f / fConst0;
-    fConst15 = 0.10660981f * fConst0;
-    fConst16 = 56.548668f / fConst0;
-  }
-  
-  virtual void instanceResetUserInterface() {
-    fEntry0 = FAUSTFLOAT(4.4e+02f);
-    fHslider0 = FAUSTFLOAT(0.0f);
-    fHslider1 = FAUSTFLOAT(1.0f);
-    fButton0 = FAUSTFLOAT(0.0f);
-    fEntry1 = FAUSTFLOAT(0.8f);
-    fHslider2 = FAUSTFLOAT(0.2f);
-  }
-  
-  virtual void instanceClear() {
-    for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
-      fVec0[l0] = 0.0f;
-    }
-    for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
-      iRec8[l1] = 0;
-    }
-    for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
-      fRec9[l2] = 0.0f;
-    }
-    IOTA0 = 0;
-    for (int l3 = 0; l3 < 8192; l3 = l3 + 1) {
-      fVec1[l3] = 0.0f;
-    }
-    for (int l4 = 0; l4 < 3; l4 = l4 + 1) {
-      fRec7[l4] = 0.0f;
-    }
-    for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
-      fRec6[l5] = 0.0f;
-    }
-    for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
-      fRec0[l6] = 0.0f;
-    }
-    for (int l7 = 0; l7 < 8192; l7 = l7 + 1) {
-      fVec2[l7] = 0.0f;
-    }
-    for (int l8 = 0; l8 < 3; l8 = l8 + 1) {
-      fRec11[l8] = 0.0f;
-    }
-    for (int l9 = 0; l9 < 2; l9 = l9 + 1) {
-      fRec10[l9] = 0.0f;
-    }
-    for (int l10 = 0; l10 < 2; l10 = l10 + 1) {
-      fRec1[l10] = 0.0f;
-    }
-    for (int l11 = 0; l11 < 4096; l11 = l11 + 1) {
-      fVec3[l11] = 0.0f;
-    }
-    for (int l12 = 0; l12 < 3; l12 = l12 + 1) {
-      fRec13[l12] = 0.0f;
-    }
-    for (int l13 = 0; l13 < 2; l13 = l13 + 1) {
-      fRec12[l13] = 0.0f;
-    }
-    for (int l14 = 0; l14 < 2; l14 = l14 + 1) {
-      fRec2[l14] = 0.0f;
-    }
-    for (int l15 = 0; l15 < 2048; l15 = l15 + 1) {
-      fVec4[l15] = 0.0f;
-    }
-    for (int l16 = 0; l16 < 3; l16 = l16 + 1) {
-      fRec15[l16] = 0.0f;
-    }
-    for (int l17 = 0; l17 < 2; l17 = l17 + 1) {
-      fRec14[l17] = 0.0f;
-    }
-    for (int l18 = 0; l18 < 2; l18 = l18 + 1) {
-      fRec3[l18] = 0.0f;
-    }
-    for (int l19 = 0; l19 < 1024; l19 = l19 + 1) {
-      fVec5[l19] = 0.0f;
-    }
-    for (int l20 = 0; l20 < 3; l20 = l20 + 1) {
-      fRec17[l20] = 0.0f;
-    }
-    for (int l21 = 0; l21 < 2; l21 = l21 + 1) {
-      fRec16[l21] = 0.0f;
-    }
-    for (int l22 = 0; l22 < 2; l22 = l22 + 1) {
-      fRec4[l22] = 0.0f;
-    }
-    for (int l23 = 0; l23 < 3; l23 = l23 + 1) {
-      fRec19[l23] = 0.0f;
-    }
-    for (int l24 = 0; l24 < 2; l24 = l24 + 1) {
-      fRec5[l24] = 0.0f;
-    }
-  }
-  
-  virtual void init(int sample_rate) {
-    classInit(sample_rate);
-    instanceInit(sample_rate);
-  }
-  virtual void instanceInit(int sample_rate) {
-    instanceConstants(sample_rate);
-    instanceResetUserInterface();
-    instanceClear();
-  }
-  
-  virtual mydsp* clone() {
-    return new mydsp();
-  }
-  
-  virtual int getSampleRate() {
-    return fSampleRate;
-  }
-  
-  virtual void buildUserInterface(UI* ui_interface) {
-    ui_interface->openVerticalBox("glassHarp");
-    ui_interface->openHorizontalBox("Basic_Parameters");
-    ui_interface->declare(&fEntry0, "1", "");
-    ui_interface->declare(&fEntry0, "tooltip", "Tone frequency");
-    ui_interface->declare(&fEntry0, "unit", "Hz");
-    ui_interface->addNumEntry("freq", &fEntry0, FAUSTFLOAT(4.4e+02f), FAUSTFLOAT(2e+01f), FAUSTFLOAT(2e+04f), FAUSTFLOAT(1.0f));
-    ui_interface->declare(&fEntry1, "1", "");
-    ui_interface->declare(&fEntry1, "tooltip", "Gain (value between 0 and 1)");
-    ui_interface->addNumEntry("gain", &fEntry1, FAUSTFLOAT(0.8f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-    ui_interface->declare(&fButton0, "1", "");
-    ui_interface->declare(&fButton0, "tooltip", "noteOn = 1, noteOff = 0");
-    ui_interface->addButton("gate", &fButton0);
-    ui_interface->closeBox();
-    ui_interface->openHorizontalBox("Physical_and_Nonlinearity");
-    ui_interface->openVerticalBox("Physical_Parameters");
-    ui_interface->declare(&fHslider1, "2", "");
-    ui_interface->declare(&fHslider1, "tooltip", "A value between 0 and 1");
-    ui_interface->addHorizontalSlider("Base_Gain", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-    ui_interface->declare(&fHslider2, "2", "");
-    ui_interface->declare(&fHslider2, "tooltip", "Bow pressure on the instrument (Value between 0 and 1)");
-    ui_interface->addHorizontalSlider("Bow_Pressure", &fHslider2, FAUSTFLOAT(0.2f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-    ui_interface->declare(&fHslider0, "2", "");
-    ui_interface->declare(&fHslider0, "tooltip", "A value between 0 and 1");
-    ui_interface->addHorizontalSlider("Integration_Constant", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-    ui_interface->closeBox();
-    ui_interface->closeBox();
-    ui_interface->closeBox();
-  }
-  
-  virtual void compute(int count, FAUSTFLOAT** RESTRICT inputs, FAUSTFLOAT** RESTRICT outputs) {
-    FAUSTFLOAT* output0 = outputs[0];
-    float fSlow0 = float(fEntry0);
-    float fSlow1 = fConst4 * std::cos(fConst3 * fSlow0);
-    float fSlow2 = float(fHslider0);
-    float fSlow3 = 0.1f * float(fHslider1) + 0.9f;
-    float fSlow4 = float(fButton0);
-    int iSlow5 = fSlow4 == 0.0f;
-    float fSlow6 = 0.1f * float(fEntry1);
-    float fSlow7 = 1e+01f - 9.0f * float(fHslider2);
-    int iSlow8 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst0 / fSlow0)));
-    float fSlow9 = fConst4 * std::cos(fConst8 * fSlow0);
-    int iSlow10 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst9 / fSlow0)));
-    float fSlow11 = fConst4 * std::cos(fConst10 * fSlow0);
-    int iSlow12 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst11 / fSlow0)));
-    float fSlow13 = fConst4 * std::cos(fConst12 * fSlow0);
-    int iSlow14 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst13 / fSlow0)));
-    float fSlow15 = fConst4 * std::cos(fConst14 * fSlow0);
-    int iSlow16 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst15 / fSlow0)));
-    float fSlow17 = fConst4 * std::cos(fConst16 * fSlow0);
-    for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-      fVec0[0] = fSlow4;
-      iRec8[0] = iSlow5 * (iRec8[1] + 1);
-      fRec9[0] = fSlow4 + fRec9[1] * float(fVec0[1] >= fSlow4);
-      float fTemp0 = fSlow6 * std::max<float>(0.0f, std::min<float>(fConst6 * fRec9[0], 1.0f) * (1.0f - fConst5 * float(iRec8[0]))) - fSlow3 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]) - fSlow2;
-      float fTemp1 = std::pow(std::fabs(fSlow7 * fTemp0) + 0.75f, -4.0f);
-      float fTemp2 = 0.16666667f * fTemp0 * (float(fTemp1 > 1.0f) + fTemp1 * float(fTemp1 <= 1.0f));
-      fVec1[IOTA0 & 8191] = fRec6[1] + fTemp2;
-      fRec7[0] = 0.999f * fVec1[(IOTA0 - iSlow8) & 8191] - (fSlow1 * fRec7[1] + fConst2 * fRec7[2]);
-      fRec6[0] = fConst7 * (fRec7[0] - fRec7[2]);
-      fRec0[0] = fRec6[0];
-      fVec2[IOTA0 & 8191] = fTemp2 + fRec10[1];
-      fRec11[0] = 0.998001f * fVec2[(IOTA0 - iSlow10) & 8191] - (fSlow9 * fRec11[1] + fConst2 * fRec11[2]);
-      fRec10[0] = fConst7 * (fRec11[0] - fRec11[2]);
-      fRec1[0] = fRec10[0];
-      fVec3[IOTA0 & 4095] = fTemp2 + fRec12[1];
-      fRec13[0] = 0.997003f * fVec3[(IOTA0 - iSlow12) & 4095] - (fSlow11 * fRec13[1] + fConst2 * fRec13[2]);
-      fRec12[0] = fConst7 * (fRec13[0] - fRec13[2]);
-      fRec2[0] = fRec12[0];
-      fVec4[IOTA0 & 2047] = fTemp2 + fRec14[1];
-      fRec15[0] = 0.996006f * fVec4[(IOTA0 - iSlow14) & 2047] - (fSlow13 * fRec15[1] + fConst2 * fRec15[2]);
-      fRec14[0] = fConst7 * (fRec15[0] - fRec15[2]);
-      fRec3[0] = fRec14[0];
-      fVec5[IOTA0 & 1023] = fTemp2 + fRec16[1];
-      fRec17[0] = 0.99501f * fVec5[(IOTA0 - iSlow16) & 1023] - (fSlow15 * fRec17[1] + fConst2 * fRec17[2]);
-      fRec16[0] = fConst7 * (fRec17[0] - fRec17[2]);
-      fRec4[0] = fRec16[0];
-      fRec19[0] = -1.0f * (fSlow17 * fRec19[1] + fConst2 * fRec19[2]);
-      float fRec18 = fConst7 * (fRec19[0] - fRec19[2]);
-      fRec5[0] = fRec18;
-      output0[i0] = FAUSTFLOAT(4.0f * (fRec5[0] + fRec3[0] + fRec0[0] + fRec2[0] + fRec4[0] + fRec1[0]));
-      fVec0[1] = fVec0[0];
-      iRec8[1] = iRec8[0];
-      fRec9[1] = fRec9[0];
-      IOTA0 = IOTA0 + 1;
-      fRec7[2] = fRec7[1];
-      fRec7[1] = fRec7[0];
-      fRec6[1] = fRec6[0];
-      fRec0[1] = fRec0[0];
-      fRec11[2] = fRec11[1];
-      fRec11[1] = fRec11[0];
-      fRec10[1] = fRec10[0];
-      fRec1[1] = fRec1[0];
-      fRec13[2] = fRec13[1];
-      fRec13[1] = fRec13[0];
-      fRec12[1] = fRec12[0];
-      fRec2[1] = fRec2[0];
-      fRec15[2] = fRec15[1];
-      fRec15[1] = fRec15[0];
-      fRec14[1] = fRec14[0];
-      fRec3[1] = fRec3[0];
-      fRec17[2] = fRec17[1];
-      fRec17[1] = fRec17[0];
-      fRec16[1] = fRec16[0];
-      fRec4[1] = fRec4[0];
-      fRec19[2] = fRec19[1];
-      fRec19[1] = fRec19[0];
-      fRec5[1] = fRec5[0];
-    }
-  }
+	virtual int getNumInputs() {
+		return 0;
+	}
+	virtual int getNumOutputs() {
+		return 1;
+	}
+	
+	static void classInit(int sample_rate) {
+	}
+	
+	virtual void instanceConstants(int sample_rate) {
+		fSampleRate = sample_rate;
+		fConst0 = std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
+		float fConst1 = 1.0f - 100.53097f / fConst0;
+		fConst2 = mydsp_faustpower2_f(fConst1);
+		fConst3 = 6.2831855f / fConst0;
+		fConst4 = 0.0f - 2.0f * fConst1;
+		fConst5 = 1.0f / std::max<float>(1.0f, fConst0);
+		fConst6 = 0.5f * (1.0f - fConst2);
+		fConst7 = 14.57699f / fConst0;
+		fConst8 = 0.43103448f * fConst0;
+		fConst9 = 26.703539f / fConst0;
+		fConst10 = 0.23529412f * fConst0;
+		fConst11 = 41.65752f / fConst0;
+		fConst12 = 0.15082957f * fConst0;
+		fConst13 = 58.93628f / fConst0;
+		fConst14 = 0.10660981f * fConst0;
+		fConst15 = 56.548668f / fConst0;
+	}
+	
+	virtual void instanceResetUserInterface() {
+		fEntry0 = FAUSTFLOAT(4.4e+02f);
+		fHslider0 = FAUSTFLOAT(0.1f);
+		fButton0 = FAUSTFLOAT(0.0f);
+		fEntry1 = FAUSTFLOAT(0.8f);
+		fHslider1 = FAUSTFLOAT(0.2f);
+	}
+	
+	virtual void instanceClear() {
+		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
+			fVec0[l0] = 0.0f;
+		}
+		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
+			iRec8[l1] = 0;
+		}
+		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
+			fRec9[l2] = 0.0f;
+		}
+		IOTA0 = 0;
+		for (int l3 = 0; l3 < 8192; l3 = l3 + 1) {
+			fVec1[l3] = 0.0f;
+		}
+		for (int l4 = 0; l4 < 3; l4 = l4 + 1) {
+			fRec7[l4] = 0.0f;
+		}
+		for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
+			fRec6[l5] = 0.0f;
+		}
+		for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
+			fRec0[l6] = 0.0f;
+		}
+		for (int l7 = 0; l7 < 8192; l7 = l7 + 1) {
+			fVec2[l7] = 0.0f;
+		}
+		for (int l8 = 0; l8 < 3; l8 = l8 + 1) {
+			fRec11[l8] = 0.0f;
+		}
+		for (int l9 = 0; l9 < 2; l9 = l9 + 1) {
+			fRec10[l9] = 0.0f;
+		}
+		for (int l10 = 0; l10 < 2; l10 = l10 + 1) {
+			fRec1[l10] = 0.0f;
+		}
+		for (int l11 = 0; l11 < 4096; l11 = l11 + 1) {
+			fVec3[l11] = 0.0f;
+		}
+		for (int l12 = 0; l12 < 3; l12 = l12 + 1) {
+			fRec13[l12] = 0.0f;
+		}
+		for (int l13 = 0; l13 < 2; l13 = l13 + 1) {
+			fRec12[l13] = 0.0f;
+		}
+		for (int l14 = 0; l14 < 2; l14 = l14 + 1) {
+			fRec2[l14] = 0.0f;
+		}
+		for (int l15 = 0; l15 < 2048; l15 = l15 + 1) {
+			fVec4[l15] = 0.0f;
+		}
+		for (int l16 = 0; l16 < 3; l16 = l16 + 1) {
+			fRec15[l16] = 0.0f;
+		}
+		for (int l17 = 0; l17 < 2; l17 = l17 + 1) {
+			fRec14[l17] = 0.0f;
+		}
+		for (int l18 = 0; l18 < 2; l18 = l18 + 1) {
+			fRec3[l18] = 0.0f;
+		}
+		for (int l19 = 0; l19 < 1024; l19 = l19 + 1) {
+			fVec5[l19] = 0.0f;
+		}
+		for (int l20 = 0; l20 < 3; l20 = l20 + 1) {
+			fRec17[l20] = 0.0f;
+		}
+		for (int l21 = 0; l21 < 2; l21 = l21 + 1) {
+			fRec16[l21] = 0.0f;
+		}
+		for (int l22 = 0; l22 < 2; l22 = l22 + 1) {
+			fRec4[l22] = 0.0f;
+		}
+		for (int l23 = 0; l23 < 3; l23 = l23 + 1) {
+			fRec19[l23] = 0.0f;
+		}
+		for (int l24 = 0; l24 < 2; l24 = l24 + 1) {
+			fRec5[l24] = 0.0f;
+		}
+	}
+	
+	virtual void init(int sample_rate) {
+		classInit(sample_rate);
+		instanceInit(sample_rate);
+	}
+	virtual void instanceInit(int sample_rate) {
+		instanceConstants(sample_rate);
+		instanceResetUserInterface();
+		instanceClear();
+	}
+	
+	virtual mydsp* clone() {
+		return new mydsp();
+	}
+	
+	virtual int getSampleRate() {
+		return fSampleRate;
+	}
+	
+	virtual void buildUserInterface(UI* ui_interface) {
+		ui_interface->openVerticalBox("glassHarp");
+		ui_interface->openHorizontalBox("Basic_Parameters");
+		ui_interface->declare(&fEntry0, "1", "");
+		ui_interface->declare(&fEntry0, "tooltip", "Tone frequency");
+		ui_interface->declare(&fEntry0, "unit", "Hz");
+		ui_interface->addNumEntry("freq", &fEntry0, FAUSTFLOAT(4.4e+02f), FAUSTFLOAT(2e+01f), FAUSTFLOAT(2e+04f), FAUSTFLOAT(1.0f));
+		ui_interface->declare(&fEntry1, "1", "");
+		ui_interface->declare(&fEntry1, "tooltip", "Gain (value between 0 and 1)");
+		ui_interface->addNumEntry("gain", &fEntry1, FAUSTFLOAT(0.8f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fButton0, "1", "");
+		ui_interface->declare(&fButton0, "tooltip", "noteOn = 1, noteOff = 0");
+		ui_interface->addButton("gate", &fButton0);
+		ui_interface->closeBox();
+		ui_interface->openHorizontalBox("Physical_and_Nonlinearity");
+		ui_interface->openVerticalBox("Physical_Parameters");
+		ui_interface->declare(&fHslider0, "2", "");
+		ui_interface->declare(&fHslider0, "tooltip", "A value between 0 and 1");
+		ui_interface->addHorizontalSlider("Base_Gain", &fHslider0, FAUSTFLOAT(0.1f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider1, "2", "");
+		ui_interface->declare(&fHslider1, "tooltip", "Bow pressure on the instrument (Value between 0 and 1)");
+		ui_interface->addHorizontalSlider("Bow_Pressure", &fHslider1, FAUSTFLOAT(0.2f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->closeBox();
+		ui_interface->closeBox();
+		ui_interface->closeBox();
+	}
+	
+	virtual void compute(int count, FAUSTFLOAT** RESTRICT inputs, FAUSTFLOAT** RESTRICT outputs) {
+		FAUSTFLOAT* output0 = outputs[0];
+		float fSlow0 = float(fEntry0);
+		float fSlow1 = fConst4 * std::cos(fConst3 * fSlow0);
+		float fSlow2 = 6.0f * (float(fHslider0) + 0.75f);
+		float fSlow3 = float(fButton0);
+		int iSlow4 = fSlow3 == 0.0f;
+		float fSlow5 = 0.15f * float(fEntry1);
+		float fSlow6 = 1e+01f - 9.0f * float(fHslider1);
+		int iSlow7 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst0 / fSlow0)));
+		float fSlow8 = fConst4 * std::cos(fConst7 * fSlow0);
+		int iSlow9 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst8 / fSlow0)));
+		float fSlow10 = fConst4 * std::cos(fConst9 * fSlow0);
+		int iSlow11 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst10 / fSlow0)));
+		float fSlow12 = fConst4 * std::cos(fConst11 * fSlow0);
+		int iSlow13 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst12 / fSlow0)));
+		float fSlow14 = fConst4 * std::cos(fConst13 * fSlow0);
+		int iSlow15 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst14 / fSlow0)));
+		float fSlow16 = fConst4 * std::cos(fConst15 * fSlow0);
+		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
+			fVec0[0] = fSlow3;
+			iRec8[0] = iSlow4 * (iRec8[1] + 1);
+			fRec9[0] = fSlow3 + fRec9[1] * float(fVec0[1] >= fSlow3);
+			float fTemp0 = fSlow5 * std::max<float>(0.0f, std::min<float>(fRec9[0], 1.0f) - fConst5 * float(iRec8[0])) - fSlow2 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]);
+			float fTemp1 = std::pow(std::fabs(fSlow6 * fTemp0) + 0.75f, -4.0f);
+			float fTemp2 = 0.16666667f * fTemp0 * (float(fTemp1 > 1.0f) + fTemp1 * float(fTemp1 <= 1.0f));
+			fVec1[IOTA0 & 8191] = fRec6[1] + fTemp2;
+			fRec7[0] = 0.999f * fVec1[(IOTA0 - iSlow7) & 8191] - (fSlow1 * fRec7[1] + fConst2 * fRec7[2]);
+			fRec6[0] = fConst6 * (fRec7[0] - fRec7[2]);
+			fRec0[0] = fRec6[0];
+			fVec2[IOTA0 & 8191] = fTemp2 + fRec10[1];
+			fRec11[0] = 0.998001f * fVec2[(IOTA0 - iSlow9) & 8191] - (fSlow8 * fRec11[1] + fConst2 * fRec11[2]);
+			fRec10[0] = fConst6 * (fRec11[0] - fRec11[2]);
+			fRec1[0] = fRec10[0];
+			fVec3[IOTA0 & 4095] = fTemp2 + fRec12[1];
+			fRec13[0] = 0.997003f * fVec3[(IOTA0 - iSlow11) & 4095] - (fSlow10 * fRec13[1] + fConst2 * fRec13[2]);
+			fRec12[0] = fConst6 * (fRec13[0] - fRec13[2]);
+			fRec2[0] = fRec12[0];
+			fVec4[IOTA0 & 2047] = fTemp2 + fRec14[1];
+			fRec15[0] = 0.996006f * fVec4[(IOTA0 - iSlow13) & 2047] - (fSlow12 * fRec15[1] + fConst2 * fRec15[2]);
+			fRec14[0] = fConst6 * (fRec15[0] - fRec15[2]);
+			fRec3[0] = fRec14[0];
+			fVec5[IOTA0 & 1023] = fTemp2 + fRec16[1];
+			fRec17[0] = 0.99501f * fVec5[(IOTA0 - iSlow15) & 1023] - (fSlow14 * fRec17[1] + fConst2 * fRec17[2]);
+			fRec16[0] = fConst6 * (fRec17[0] - fRec17[2]);
+			fRec4[0] = fRec16[0];
+			fRec19[0] = -1.0f * (fSlow16 * fRec19[1] + fConst2 * fRec19[2]);
+			float fRec18 = fConst6 * (fRec19[0] - fRec19[2]);
+			fRec5[0] = fRec18;
+			output0[i0] = FAUSTFLOAT(4.0f * (fRec5[0] + fRec3[0] + fRec0[0] + fRec2[0] + fRec4[0] + fRec1[0]));
+			fVec0[1] = fVec0[0];
+			iRec8[1] = iRec8[0];
+			fRec9[1] = fRec9[0];
+			IOTA0 = IOTA0 + 1;
+			fRec7[2] = fRec7[1];
+			fRec7[1] = fRec7[0];
+			fRec6[1] = fRec6[0];
+			fRec0[1] = fRec0[0];
+			fRec11[2] = fRec11[1];
+			fRec11[1] = fRec11[0];
+			fRec10[1] = fRec10[0];
+			fRec1[1] = fRec1[0];
+			fRec13[2] = fRec13[1];
+			fRec13[1] = fRec13[0];
+			fRec12[1] = fRec12[0];
+			fRec2[1] = fRec2[0];
+			fRec15[2] = fRec15[1];
+			fRec15[1] = fRec15[0];
+			fRec14[1] = fRec14[0];
+			fRec3[1] = fRec3[0];
+			fRec17[2] = fRec17[1];
+			fRec17[1] = fRec17[0];
+			fRec16[1] = fRec16[0];
+			fRec4[1] = fRec4[0];
+			fRec19[2] = fRec19[1];
+			fRec19[1] = fRec19[0];
+			fRec5[1] = fRec5[0];
+		}
+	}
 
 };
 
 #ifdef FAUST_UIMACROS
-  
-  #define FAUST_FILE_NAME "glassHarp.dsp"
-  #define FAUST_CLASS_NAME "mydsp"
-  #define FAUST_COMPILATION_OPIONS "-a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -es 1 -mcd 16 -uim -single -ftz 0"
-  #define FAUST_INPUTS 0
-  #define FAUST_OUTPUTS 1
-  #define FAUST_ACTIVES 6
-  #define FAUST_PASSIVES 0
+	
+	#define FAUST_FILE_NAME "glassHarp.dsp"
+	#define FAUST_CLASS_NAME "mydsp"
+	#define FAUST_COMPILATION_OPIONS "-a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -es 1 -mcd 16 -uim -single -ftz 0"
+	#define FAUST_INPUTS 0
+	#define FAUST_OUTPUTS 1
+	#define FAUST_ACTIVES 5
+	#define FAUST_PASSIVES 0
 
-  FAUST_ADDNUMENTRY("Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f);
-  FAUST_ADDNUMENTRY("Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f);
-  FAUST_ADDBUTTON("Basic_Parameters/gate", fButton0);
-  FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f);
-  FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f);
-  FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDNUMENTRY("Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f);
+	FAUST_ADDNUMENTRY("Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDBUTTON("Basic_Parameters/gate", fButton0);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 0.1f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider1, 0.2f, 0.0f, 1.0f, 0.01f);
 
-  #define FAUST_LIST_ACTIVES(p) \
-    p(NUMENTRY, freq, "Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f) \
-    p(NUMENTRY, gain, "Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f) \
-    p(BUTTON, gate, "Basic_Parameters/gate", fButton0, 0.0f, 0.0f, 1.0f, 1.0f) \
-    p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f) \
-    p(HORIZONTALSLIDER, Bow_Pressure, "Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f) \
-    p(HORIZONTALSLIDER, Integration_Constant, "Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f) \
+	#define FAUST_LIST_ACTIVES(p) \
+		p(NUMENTRY, freq, "Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f) \
+		p(NUMENTRY, gain, "Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f) \
+		p(BUTTON, gate, "Basic_Parameters/gate", fButton0, 0.0f, 0.0f, 1.0f, 1.0f) \
+		p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 0.1f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, Bow_Pressure, "Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider1, 0.2f, 0.0f, 1.0f, 0.01f) \
 
-  #define FAUST_LIST_PASSIVES(p) \
+	#define FAUST_LIST_PASSIVES(p) \
 
 #endif
 

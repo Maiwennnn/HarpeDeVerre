@@ -9847,45 +9847,44 @@ class mydsp : public dsp {
 	float fConst3;
 	float fConst4;
 	FAUSTFLOAT fHslider0;
-	FAUSTFLOAT fHslider1;
 	FAUSTFLOAT fButton0;
 	float fVec0[2];
 	int iRec8[2];
-	float fConst5;
+	FAUSTFLOAT fHslider1;
 	float fRec9[2];
 	FAUSTFLOAT fEntry1;
 	FAUSTFLOAT fHslider2;
 	int IOTA0;
 	float fVec1[8192];
 	float fRec7[3];
-	float fConst6;
+	float fConst5;
 	float fRec6[2];
 	float fRec0[2];
-	float fConst7;
+	float fConst6;
 	float fVec2[8192];
-	float fConst8;
+	float fConst7;
 	float fRec11[3];
 	float fRec10[2];
 	float fRec1[2];
-	float fConst9;
+	float fConst8;
 	float fVec3[4096];
-	float fConst10;
+	float fConst9;
 	float fRec13[3];
 	float fRec12[2];
 	float fRec2[2];
-	float fConst11;
+	float fConst10;
 	float fVec4[2048];
-	float fConst12;
+	float fConst11;
 	float fRec15[3];
 	float fRec14[2];
 	float fRec3[2];
-	float fConst13;
+	float fConst12;
 	float fVec5[1024];
-	float fConst14;
+	float fConst13;
 	float fRec17[3];
 	float fRec16[2];
 	float fRec4[2];
-	float fConst15;
+	float fConst14;
 	float fRec19[3];
 	float fRec5[2];
 	
@@ -9897,8 +9896,8 @@ class mydsp : public dsp {
 		m->declare("copyright", "Romain Michon (rmichon@ccrma.stanford.edu)");
 		m->declare("delays_lib_name", "Faust Delay Library");
 		m->declare("delays_lib_version", "0.1");
-		m->declare("description", "Nonlinear Banded Waveguide Modeled Glass Harmonica");
-		m->declare("envelopes_lib_adsr_author", "Yann Orlarey and Andrey Bundin");
+		m->declare("description", "This instrument uses banded waveguide. For more information, see Essl, G. and Cook, P. Banded Waveguides: Towards Physical Modelling of Bar Percussion Instruments, Proceedings of the 1999 International Computer Music Conference.");
+		m->declare("envelopes_lib_asr_author", "Yann Orlarey, Stéphane Letz");
 		m->declare("envelopes_lib_author", "GRAME");
 		m->declare("envelopes_lib_copyright", "GRAME");
 		m->declare("envelopes_lib_license", "LGPL with exception");
@@ -9948,24 +9947,23 @@ class mydsp : public dsp {
 		fConst2 = mydsp_faustpower2_f(fConst1);
 		fConst3 = 6.2831855f / fConst0;
 		fConst4 = 0.0f - 2.0f * fConst1;
-		fConst5 = 1.0f / std::max<float>(1.0f, 3.0f * fConst0);
-		fConst6 = 0.5f * (1.0f - fConst2);
-		fConst7 = 14.57699f / fConst0;
-		fConst8 = 0.43103448f * fConst0;
-		fConst9 = 26.703539f / fConst0;
-		fConst10 = 0.23529412f * fConst0;
-		fConst11 = 41.65752f / fConst0;
-		fConst12 = 0.15082957f * fConst0;
-		fConst13 = 58.93628f / fConst0;
-		fConst14 = 0.10660981f * fConst0;
-		fConst15 = 56.548668f / fConst0;
+		fConst5 = 0.5f * (1.0f - fConst2);
+		fConst6 = 14.57699f / fConst0;
+		fConst7 = 0.43103448f * fConst0;
+		fConst8 = 26.703539f / fConst0;
+		fConst9 = 0.23529412f * fConst0;
+		fConst10 = 41.65752f / fConst0;
+		fConst11 = 0.15082957f * fConst0;
+		fConst12 = 58.93628f / fConst0;
+		fConst13 = 0.10660981f * fConst0;
+		fConst14 = 56.548668f / fConst0;
 	}
 	
 	virtual void instanceResetUserInterface() {
 		fEntry0 = FAUSTFLOAT(4.4e+02f);
-		fHslider0 = FAUSTFLOAT(0.0f);
-		fHslider1 = FAUSTFLOAT(1.0f);
+		fHslider0 = FAUSTFLOAT(0.1f);
 		fButton0 = FAUSTFLOAT(0.0f);
+		fHslider1 = FAUSTFLOAT(0.0f);
 		fEntry1 = FAUSTFLOAT(0.8f);
 		fHslider2 = FAUSTFLOAT(0.2f);
 	}
@@ -10083,15 +10081,15 @@ class mydsp : public dsp {
 		ui_interface->closeBox();
 		ui_interface->openHorizontalBox("Physical_and_Nonlinearity");
 		ui_interface->openVerticalBox("Physical_Parameters");
-		ui_interface->declare(&fHslider1, "2", "");
-		ui_interface->declare(&fHslider1, "tooltip", "A value between 0 and 1");
-		ui_interface->addHorizontalSlider("Base_Gain", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider0, "2", "");
+		ui_interface->declare(&fHslider0, "tooltip", "A value between 0 and 1");
+		ui_interface->addHorizontalSlider("Base_Gain", &fHslider0, FAUSTFLOAT(0.1f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
 		ui_interface->declare(&fHslider2, "2", "");
 		ui_interface->declare(&fHslider2, "tooltip", "Bow pressure on the instrument (Value between 0 and 1)");
 		ui_interface->addHorizontalSlider("Bow_Pressure", &fHslider2, FAUSTFLOAT(0.2f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->declare(&fHslider0, "2", "");
-		ui_interface->declare(&fHslider0, "tooltip", "A value between 0 and 1");
-		ui_interface->addHorizontalSlider("Integration_Constant", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->declare(&fHslider1, "2", "");
+		ui_interface->declare(&fHslider1, "tooltip", "TIme to play note");
+		ui_interface->addHorizontalSlider("release", &fHslider1, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(5.0f), FAUSTFLOAT(0.1f));
 		ui_interface->closeBox();
 		ui_interface->closeBox();
 		ui_interface->closeBox();
@@ -10101,51 +10099,51 @@ class mydsp : public dsp {
 		FAUSTFLOAT* output0 = outputs[0];
 		float fSlow0 = float(fEntry0);
 		float fSlow1 = fConst4 * std::cos(fConst3 * fSlow0);
-		float fSlow2 = float(fHslider0);
-		float fSlow3 = 0.1f * float(fHslider1) + 2.0f;
-		float fSlow4 = float(fButton0);
-		int iSlow5 = fSlow4 == 0.0f;
-		float fSlow6 = 0.1f * float(fEntry1);
+		float fSlow2 = 6.0f * (float(fHslider0) + 0.75f);
+		float fSlow3 = float(fButton0);
+		int iSlow4 = fSlow3 == 0.0f;
+		float fSlow5 = 1.0f / std::max<float>(1.0f, fConst0 * float(fHslider1));
+		float fSlow6 = 0.15f * float(fEntry1);
 		float fSlow7 = 1e+01f - 9.0f * float(fHslider2);
 		int iSlow8 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst0 / fSlow0)));
-		float fSlow9 = fConst4 * std::cos(fConst7 * fSlow0);
-		int iSlow10 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst8 / fSlow0)));
-		float fSlow11 = fConst4 * std::cos(fConst9 * fSlow0);
-		int iSlow12 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst10 / fSlow0)));
-		float fSlow13 = fConst4 * std::cos(fConst11 * fSlow0);
-		int iSlow14 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst12 / fSlow0)));
-		float fSlow15 = fConst4 * std::cos(fConst13 * fSlow0);
-		int iSlow16 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst14 / fSlow0)));
-		float fSlow17 = fConst4 * std::cos(fConst15 * fSlow0);
+		float fSlow9 = fConst4 * std::cos(fConst6 * fSlow0);
+		int iSlow10 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst7 / fSlow0)));
+		float fSlow11 = fConst4 * std::cos(fConst8 * fSlow0);
+		int iSlow12 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst9 / fSlow0)));
+		float fSlow13 = fConst4 * std::cos(fConst10 * fSlow0);
+		int iSlow14 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst11 / fSlow0)));
+		float fSlow15 = fConst4 * std::cos(fConst12 * fSlow0);
+		int iSlow16 = int(std::min<float>(4096.0f, std::max<float>(0.0f, fConst13 / fSlow0)));
+		float fSlow17 = fConst4 * std::cos(fConst14 * fSlow0);
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-			fVec0[0] = fSlow4;
-			iRec8[0] = iSlow5 * (iRec8[1] + 1);
-			fRec9[0] = fSlow4 + fRec9[1] * float(fVec0[1] >= fSlow4);
-			float fTemp0 = fSlow6 * std::max<float>(0.0f, std::min<float>(fRec9[0], 1.0f) * (1.0f - fConst5 * float(iRec8[0]))) - fSlow3 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]) - fSlow2;
+			fVec0[0] = fSlow3;
+			iRec8[0] = iSlow4 * (iRec8[1] + 1);
+			fRec9[0] = fSlow3 + fRec9[1] * float(fVec0[1] >= fSlow3);
+			float fTemp0 = fSlow6 * std::max<float>(0.0f, std::min<float>(fRec9[0], 1.0f) - fSlow5 * float(iRec8[0])) - fSlow2 * (fRec0[1] + fRec2[1] + fRec4[1] + fRec1[1] + fRec3[1] + fRec5[1]);
 			float fTemp1 = std::pow(std::fabs(fSlow7 * fTemp0) + 0.75f, -4.0f);
 			float fTemp2 = 0.16666667f * fTemp0 * (float(fTemp1 > 1.0f) + fTemp1 * float(fTemp1 <= 1.0f));
 			fVec1[IOTA0 & 8191] = fRec6[1] + fTemp2;
 			fRec7[0] = 0.999f * fVec1[(IOTA0 - iSlow8) & 8191] - (fSlow1 * fRec7[1] + fConst2 * fRec7[2]);
-			fRec6[0] = fConst6 * (fRec7[0] - fRec7[2]);
+			fRec6[0] = fConst5 * (fRec7[0] - fRec7[2]);
 			fRec0[0] = fRec6[0];
 			fVec2[IOTA0 & 8191] = fTemp2 + fRec10[1];
 			fRec11[0] = 0.998001f * fVec2[(IOTA0 - iSlow10) & 8191] - (fSlow9 * fRec11[1] + fConst2 * fRec11[2]);
-			fRec10[0] = fConst6 * (fRec11[0] - fRec11[2]);
+			fRec10[0] = fConst5 * (fRec11[0] - fRec11[2]);
 			fRec1[0] = fRec10[0];
 			fVec3[IOTA0 & 4095] = fTemp2 + fRec12[1];
 			fRec13[0] = 0.997003f * fVec3[(IOTA0 - iSlow12) & 4095] - (fSlow11 * fRec13[1] + fConst2 * fRec13[2]);
-			fRec12[0] = fConst6 * (fRec13[0] - fRec13[2]);
+			fRec12[0] = fConst5 * (fRec13[0] - fRec13[2]);
 			fRec2[0] = fRec12[0];
 			fVec4[IOTA0 & 2047] = fTemp2 + fRec14[1];
 			fRec15[0] = 0.996006f * fVec4[(IOTA0 - iSlow14) & 2047] - (fSlow13 * fRec15[1] + fConst2 * fRec15[2]);
-			fRec14[0] = fConst6 * (fRec15[0] - fRec15[2]);
+			fRec14[0] = fConst5 * (fRec15[0] - fRec15[2]);
 			fRec3[0] = fRec14[0];
 			fVec5[IOTA0 & 1023] = fTemp2 + fRec16[1];
 			fRec17[0] = 0.99501f * fVec5[(IOTA0 - iSlow16) & 1023] - (fSlow15 * fRec17[1] + fConst2 * fRec17[2]);
-			fRec16[0] = fConst6 * (fRec17[0] - fRec17[2]);
+			fRec16[0] = fConst5 * (fRec17[0] - fRec17[2]);
 			fRec4[0] = fRec16[0];
 			fRec19[0] = -1.0f * (fSlow17 * fRec19[1] + fConst2 * fRec19[2]);
-			float fRec18 = fConst6 * (fRec19[0] - fRec19[2]);
+			float fRec18 = fConst5 * (fRec19[0] - fRec19[2]);
 			fRec5[0] = fRec18;
 			output0[i0] = FAUSTFLOAT(4.0f * (fRec5[0] + fRec3[0] + fRec0[0] + fRec2[0] + fRec4[0] + fRec1[0]));
 			fVec0[1] = fVec0[0];
@@ -10193,17 +10191,17 @@ class mydsp : public dsp {
 	FAUST_ADDNUMENTRY("Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f);
 	FAUST_ADDNUMENTRY("Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f);
 	FAUST_ADDBUTTON("Basic_Parameters/gate", fButton0);
-	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 0.1f, 0.0f, 1.0f, 0.01f);
 	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("Physical_and_Nonlinearity/Physical_Parameters/release", fHslider1, 0.0f, 0.0f, 5.0f, 0.1f);
 
 	#define FAUST_LIST_ACTIVES(p) \
 		p(NUMENTRY, freq, "Basic_Parameters/freq", fEntry0, 4.4e+02f, 2e+01f, 2e+04f, 1.0f) \
 		p(NUMENTRY, gain, "Basic_Parameters/gain", fEntry1, 0.8f, 0.0f, 1.0f, 0.01f) \
 		p(BUTTON, gate, "Basic_Parameters/gate", fButton0, 0.0f, 0.0f, 1.0f, 1.0f) \
-		p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider1, 1.0f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, Base_Gain, "Physical_and_Nonlinearity/Physical_Parameters/Base_Gain", fHslider0, 0.1f, 0.0f, 1.0f, 0.01f) \
 		p(HORIZONTALSLIDER, Bow_Pressure, "Physical_and_Nonlinearity/Physical_Parameters/Bow_Pressure", fHslider2, 0.2f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Integration_Constant, "Physical_and_Nonlinearity/Physical_Parameters/Integration_Constant", fHslider0, 0.0f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, release, "Physical_and_Nonlinearity/Physical_Parameters/release", fHslider1, 0.0f, 0.0f, 5.0f, 0.1f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

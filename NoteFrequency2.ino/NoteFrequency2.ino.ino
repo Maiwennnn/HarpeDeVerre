@@ -22,19 +22,37 @@ const int myInput = AUDIO_INPUT_MIC;
 //---------------------------------------------------------------------------------------
 AudioAnalyzeNoteFrequency notefreq;
 AudioPlayMemory           wav_note;
-AudioMixer4               mixer;
+AudioMixer4               mixer1;
+AudioMixer4               mixer2;
 AudioOutputI2S         audioOutput; 
 AudioInputI2S          audioInput;
 AudioAnalyzePeak aap;
-glassHarp gh;
-float note_prec=10;
-float threshold =0.15; 
+glassHarp gh1;
+glassHarp gh2;
+glassHarp gh3;
+glassHarp g []={gh1, gh2, gh3};
+float ecart [3]={};
+float note_prec;
+float note_act;
+float note_suiv; 
+float note;
+float threshold =0.2; 
+float peak; 
+float prob;
+float ecart_act;
+float ecart_prec;
+bool joue = false;
+float notes_gh [3]={};
+int compteur=0;
 //---------------------------------------------------------------------------------------
-AudioConnection patchCord0(audioInput, 0, mixer, 0);
-AudioConnection patchCord1(mixer, 0, notefreq, 0);
+AudioConnection patchCord0(audioInput, 0, mixer1, 0);
+AudioConnection patchCord1(mixer1, 0, notefreq, 0);
 AudioConnection patchCord4(audioInput, 0, aap, 0);
-AudioConnection patchCord2(gh, 0, audioOutput, 0);
-AudioConnection patchCord3(gh, 0, audioOutput, 1);
+AudioConnection patchCord5(gh1, 0, mixer2, 0);
+AudioConnection patchCord6(gh2, 0, mixer2, 0);
+AudioConnection patchCord7(gh3, 0, mixer2, 0);
+AudioConnection patchCord2(mixer2, 0, audioOutput, 0);
+AudioConnection patchCord3(mixer2, 0, audioOutput, 1);
 AudioControlSGTL5000 audioShield;
 //---------------------------------------------------------------------------------------
 //digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
@@ -44,32 +62,96 @@ void setup() {
     audioShield.enable();
     audioShield.inputSelect(myInput);
     audioShield.volume(0.6);
-    mixer.gain(0,0.8);
-    //gh.setParamValue("duree", 2); 
+    mixer1.gain(0,0.8);
+    //gh.setParamValue("duree", 0.5); 
     /*
      *  Initialize the yin algorithm's absolute
      *  threshold, this is good number.
      */
-    notefreq.begin(0.2);
+    notefreq.begin(0.15);
     
     pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(A0, INPUT);
+    pinMode(A1, INPUT);
+}
+void joueNote(glassHarp gh, float note, float peak){
+  //joue = false;
+  gh.setParamValue("freq", note);
+  float v =analogRead(A0)*0.0009775171;
+  audioShield.volume(v*peak);
+  gh.setParamValue("gate", 1);
+  delay(500);
+  gh.setParamValue("gate", 0);
+  delay(50);
+  //joue = true; 
 }
 
 void loop() {
-  //Serial.printf("haaaa");
-    // read back fundamental frequency
-    if (notefreq.available()and notefreq.read()>60 and aap.available()and aap.read()>threshold) {
-        float note = notefreq.read();
-        float ecart = note_prec*0.02973;
-        if((note>note_prec+ecart or note<note_prec-ecart)){
-          gh.setParamValue("gate", 0);
-          delay(100);
-          gh.setParamValue("freq", note);
-          gh.setParamValue("gate", 1);
-          note_prec=note;
+  
+  if (notefreq.available()and aap.available()){
+    peak = aap.read();
+    if(peak>threshold){
+      note=notefreq.read();
+      
+      if(note>60){
+        prob = notefreq.probability();
+        for (int i=0;i<=2;i++){
+          if(note<notes_gh[i]+ecart[i] and note>notes_gh[i]-ecart[i]){
+              joue=true;
+              
+          }
         }
-        float prob = notefreq.probability();
-        Serial.printf("Note: %3.2f | Probability: %.2f\n", note, prob);
+        if(!joue){
+          joueNote(g[compteur], note, peak);
+          notes_gh[compteur]=note;
+          ecart[compteur]=note*0.02973;
+          if (compteur>1){
+            compteur=0;
+          }else{
+            compteur++;
+          }
+          Serial.printf("Note: %3.2f | Probability: %.2f, Volume : %f\n", note, prob, peak);
+      }
+      
+        
+      }
+      
+      
     }
+  }
+  
 
+
+  
+  /*if (notefreq.available()and aap.available()and joue==true){
+    note_suiv=notefreq.read();
+    peak =aap.read();
+    prob = notefreq.probability();
+    if(note_suiv>60 and note_suiv<3000 and peak>threshold){
+      if(note_prec ){
+        ecart_act = note_act*0.02973;
+        ecart_prec= note_prec*0.02973;
+        if (note_suiv>note_act+ecart_act or note_suiv<note_act-ecart_act){
+          if(note_act<note_prec+ecart_prec and note_act>note_prec-ecart_prec){
+            joueNote(note_prec, peak);            
+          }else{
+            //on joue la note actuelle
+            joueNote(note_act, peak);
+          }
+        }else{
+          if(note_act>note_prec+ecart_prec or note_act<note_prec-ecart_prec){
+            //on joue note actuelle
+            joueNote(note_act, peak);            
+          }
+        }
+      }else{
+        //on noue la note actuelle
+        joueNote(note_act, peak);
+      }
+      Serial.printf("Note: %3.2f | Probability: %.2f, Volume : %d, Threshold : %d\n", note_suiv, prob, analogRead(A0), threshold);
+      note_act=note_suiv;
+      note_prec=note_act;
+    }
+  }*/
+  
 }
