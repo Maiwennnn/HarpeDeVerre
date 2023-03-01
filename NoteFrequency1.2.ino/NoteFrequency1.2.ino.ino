@@ -33,7 +33,7 @@ float note_prec=10;
 float threshold =0.2; 
 float prevPeak=0;
 MyDsp d;
-boolean clavier=true;
+boolean clavier=false;
 int incomingByte; 
 float freq; 
 //---------------------------------------------------------------------------------------
@@ -50,11 +50,9 @@ void setup() {
   Serial.begin(9600);
   AudioMemory(30);
   audioShield.enable();
-  patchCord5.disconnect();
   audioShield.inputSelect(myInput);
   audioShield.volume(0.8);
   mixer.gain(0,0.8);
-  mixer1.gain(0,0.2);
   //gh.setParamValue("bowPressure", 0.2); 
   /*
    *  Initialize the yin algorithm's absolute
@@ -115,9 +113,9 @@ void joueClavier(){
     Serial.write("On joue la note\n");    
     gh.setParamValue("freq", freq);
     gh.setParamValue("gate", 1);
-    delay(1000);
+    delay(600);
     gh.setParamValue("gate", 0);
-    delay(50);
+    delay(100);
   }
 }
 
@@ -128,14 +126,16 @@ void loop() {
       //Serial.printf("appuyé\n");
       if (clavier==false){
         audioShield.volume(0.8);
-        Serial.write("c"); 
+        Serial.write("c");
         patchCord0.disconnect();
         clavier=true;
+        delay(500); 
       }else {
         audioShield.volume(0.2);
         patchCord0.connect();
         Serial.write("h");
         clavier=false;
+        delay(500); 
       }
     }
     if(clavier){
@@ -152,7 +152,7 @@ void loop() {
             Serial.printf("Note: %3.2f | Probability: %.2f, peak:%.2f\n", note, prob,peak);
             gh.setParamValue("freq", note);
             float v =analogRead(A0)*0.0009775171;
-            audioShield.volume(v*peak);
+            audioShield.volume(v);
             gh.setParamValue("gate", 1);
             delay(600);
             gh.setParamValue("gate", 0);
@@ -165,7 +165,7 @@ void loop() {
             Serial.printf("La meme Note: %3.2f | Probability: %.2f, peak:%.2f\n", note, prob,peak);
             gh.setParamValue("freq", note);
             float v =analogRead(A0)*0.0009775171;
-            audioShield.volume(v*peak);
+            audioShield.volume(v);
             gh.setParamValue("gate", 1);
             delay(600);
             gh.setParamValue("gate", 0);
@@ -177,7 +177,7 @@ void loop() {
     }
         
         
-      if(aap1.available()){
+      else if(aap1.available()){
         float peak=aap1.read();
         if (notefreq.available()){
           float ecart = note_prec*0.02973;
@@ -188,7 +188,7 @@ void loop() {
               Serial.printf("Note: %3.2f | Probability: %.2f, peak:%.2f\n", note, prob,peak);
               gh.setParamValue("freq", note);
               float v =analogRead(A0)*0.0009775171;
-              audioShield.volume(v*peak);
+              audioShield.volume(v);
               gh.setParamValue("gate", 1);
               delay(600);
               gh.setParamValue("gate", 0);
@@ -200,7 +200,7 @@ void loop() {
             Serial.printf("Note: %3.2f | Probability: %.2f, peak:%.2f\n", note, prob,peak);
             gh.setParamValue("freq", note);
             float v =analogRead(A0)*0.0009775171;
-            audioShield.volume(v*peak);
+            audioShield.volume(0.9-v*0.4);
             gh.setParamValue("gate", 1);
             delay(600);
             gh.setParamValue("gate", 0);
@@ -213,4 +213,3 @@ void loop() {
       
         
 }
-//Vol=40
