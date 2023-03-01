@@ -25,7 +25,6 @@ const int myInput = AUDIO_INPUT_MIC;
 AudioAnalyzeNoteFrequency notefreq;
 AudioPlayMemory           wav_note;
 AudioMixer4               mixer;
-AudioMixer4               mixer1;
 AudioOutputI2S         audioOutput; 
 AudioInputI2S          audioInput;
 AudioAnalyzePeak1       aap1;
@@ -34,14 +33,13 @@ float note_prec=10;
 float threshold =0.2; 
 float prevPeak=0;
 MyDsp d;
-boolean traitement=true;
+boolean clavier=true;
+int incomingByte; 
+float freq; 
 //---------------------------------------------------------------------------------------
 AudioConnection patchCord0(audioInput, 0, mixer, 0);
-AudioConnection patchCord7(audioInput, 0, mixer1, 0);
 AudioConnection patchCord1(mixer, 0, notefreq, 0);
 AudioConnection patchCord4(mixer, 0, aap1, 0);
-AudioConnection patchCord5(mixer1, 0, audioOutput, 0);
-AudioConnection patchCord6(mixer1, 0, audioOutput, 1);
 AudioConnection patchCord2(gh, 0, audioOutput, 0);
 AudioConnection patchCord3(gh, 0, audioOutput, 1);
 AudioControlSGTL5000 audioShield;
@@ -49,22 +47,78 @@ AudioControlSGTL5000 audioShield;
 //digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
 //---------------------------------------------------------------------------------------
 void setup() {
-    AudioMemory(30);
-    audioShield.enable();
-    patchCord5.disconnect();
-    audioShield.inputSelect(myInput);
-    audioShield.volume(0.8);
-    mixer.gain(0,0.8);
-    mixer1.gain(0,0.2);
-    //gh.setParamValue("bowPressure", 0.2); 
-    /*
-     *  Initialize the yin algorithm's absolute
-     *  threshold, this is good number.
-     */
-    notefreq.begin(0.1);
-    pinMode(A0, INPUT);
-    pinMode(15, INPUT);
-    pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  AudioMemory(30);
+  audioShield.enable();
+  patchCord5.disconnect();
+  audioShield.inputSelect(myInput);
+  audioShield.volume(0.8);
+  mixer.gain(0,0.8);
+  mixer1.gain(0,0.2);
+  //gh.setParamValue("bowPressure", 0.2); 
+  /*
+   *  Initialize the yin algorithm's absolute
+   *  threshold, this is good number.
+   */
+  notefreq.begin(0.1);
+  pinMode(A0, INPUT);
+  pinMode(15, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void joueClavier(){
+  if (Serial.available() > 0) {
+    // read the oldest byte in the serial buffer:
+    incomingByte = Serial.read();
+    switch(incomingByte){
+      case 'a':
+        freq=261.6;
+        break;
+      case 'z':
+        freq=277.2;
+        break;
+      case 'e':
+        freq=293.7;
+        break;
+      case 'r':
+        freq=311.1;
+        break;
+      case 't':
+        freq=329.6;
+        break;
+      case 'y':
+        freq=349.2;
+        break;
+      case 'u':
+        freq=370;
+        break;
+      case 'i':
+        freq=392;
+        break;
+      case 'o':
+        freq=415.3;
+        break;
+      case 'p':
+        freq=440;
+        break;
+      case '^':
+        freq=466.2;
+        break;
+      case '$':
+        freq=493.9;
+        break;
+         
+    }
+    
+
+    
+    Serial.write("On joue la note\n");    
+    gh.setParamValue("freq", freq);
+    gh.setParamValue("gate", 1);
+    delay(1000);
+    gh.setParamValue("gate", 0);
+    delay(50);
+  }
 }
 
 void loop() {
@@ -72,24 +126,22 @@ void loop() {
     // read back fundamental frequency
     if (digitalRead(15)==HIGH ){
       //Serial.printf("appuyé\n");
-      if (traitement==false){
+      if (clavier==false){
         audioShield.volume(0.8);
-        patchCord6.disconnect();
-        patchCord5.disconnect();
-        patchCord2.connect();
-        patchCord3.connect();
-        traitement=true;
+        Serial.write("c"); 
+        patchCord0.disconnect();
+        clavier=true;
       }else {
         audioShield.volume(0.2);
-        patchCord2.disconnect();
-        patchCord3.disconnect();
-        patchCord5.connect();
-        patchCord6.connect();
-        traitement=false;
+        patchCord0.connect();
+        Serial.write("h");
+        clavier=false;
       }
     }
-    
-    if (notefreq.available() ) {
+    if(clavier){
+      joueClavier();
+    }
+    else if (notefreq.available() ) {
       float note = notefreq.read();
       float prob = notefreq.probability();
       if(aap1.available()){
