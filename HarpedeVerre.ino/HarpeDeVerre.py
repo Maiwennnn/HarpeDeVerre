@@ -100,6 +100,7 @@ def on_press(key):
             while (utilise):
                 pass
             ser.write(bytes(k, 'utf8'))
+            #ser.close()
         elif k=='x':
             ser.close()
             exit(1)
@@ -134,4 +135,5 @@ while True:
         else:
             print(note)
         utilise=False
+        #print(utilise)
     

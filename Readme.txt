@@ -3,7 +3,7 @@ Projet Son : La Harpe de Verre
 Maiwenn Kermorgant et Abdelwedoud Taya, G1
 
 Notre projet a pour but de rejouer une mélodie jouée au micro, mais avec le son d'une harpe de verre. Comme il nous restait du temps, nous avons aussi implémenté un autre mode, assez rudimentaire, qui permet de jouer de la harpe de verre en utilisant les touches "a" à "*" et de "q" à "m" du clavier, chaque touche représentant une note de la gamme. Ces deux modes permettent de découvrir la harpe de verre, un instument méconnu, de façon amusante. 
-Le code se compose d'un fichier arduino, NOMFICHIER, et d'une fonction C++ ainsi que de son fichier .h, glassHarp. Téléversez-les dans la Teensy. Enfin, pour utiliser le mode clavier, il faut exécuter le programme python HarpeDeVerre.py. Prendre garde à ne pas ouvrir la console COM5 avant le lancer le programme python, car celui-ci l'utilise pour communiquer avec le programme arduino. Tout l'affichage se réalise dans le terminal de python.Lorsque la teensy détectera une note elle sera afficher dans ce terminal.
+Le code se compose d'un fichier arduino, NOMFICHIER, et d'une fonction C++ ainsi que de son fichier .h, glassHarp. Téléversez-les dans la Teensy. Enfin, pour utiliser le mode clavier, il faut exécuter le programme python HarpeDeVerre.py. Prendre garde à ne pas ouvrir le moniteur série avant le lancer le programme python, car celui-ci l'utilise pour communiquer avec le programme arduino. Tout l'affichage se réalise dans le terminal de python.Lorsque la teensy détectera une note elle sera afficher dans ce terminal.
 Il faut également disposer des bibliothèques python Serial et Pynput avec les commandes suivantes :
 
 pip install pyserial
